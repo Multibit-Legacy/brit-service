@@ -55,16 +55,16 @@ from GitHub and do the following:
 ```
 cd <project root>
 mvn clean install
-java -jar target/site-<version>.jar server brit-config.yml
+java -jar target/brit-server-<version>.jar server brit-config.yml
 ```
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
-as found in `pom.xml` (e.g. "3.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
+as found in `pom.xml` (e.g. "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
 
 All commands will work on *nix without modification, use \ instead of / for Windows.
 
 Open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
-public key.
+public key. Note it is port 9090 not the usual 8080.
 
 ### Where does the ASCII art come from?
 

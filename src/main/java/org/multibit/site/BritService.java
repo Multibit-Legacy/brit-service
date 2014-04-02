@@ -40,7 +40,7 @@ public class BritService extends Service<BritConfiguration> {
   /**
    * The Matcher
    */
-  private static Matcher matcher;
+  private final Matcher matcher;
 
   /**
    * Main entry point to the application
@@ -54,24 +54,26 @@ public class BritService extends Service<BritConfiguration> {
     // Securely read the password from the console
     final char[] password = readPassword();
 
-    verifyMatcher(password);
+    Matcher matcher = newMatcher(password);
 
     // Clear the password
     Arrays.fill(password, ' ');
 
-    Preconditions.checkNotNull(matcher,"'matcher' must be present");
+    Preconditions.checkNotNull(matcher, "'matcher' must be present");
 
     // Must be OK to be here
-    new BritService().run(args);
+    new BritService(matcher).run(args);
 
   }
 
   /**
+   * <p>Initialise the Matcher</p>
+   *
    * @param password The password for the Matcher secret keyring
    *
    * @throws IOException If the Matcher fails to start
    */
-  private static void verifyMatcher(char[] password) throws IOException {
+  private static Matcher newMatcher(char[] password) throws IOException {
 
     final File britMatcherDirectory = new File(BRIT_MATCHER_DIRECTORY);
     if (!britMatcherDirectory.exists()) {
@@ -98,9 +100,7 @@ public class BritService extends Service<BritConfiguration> {
     MatcherStore matcherStore = MatcherStores.newBasicMatcherStore(matcherStoreDirectory);
 
     // Build the Matcher
-    matcher = Matchers.newBasicMatcher(matcherConfig, matcherStore);
-
-    // Load the matcher addresses
+    return Matchers.newBasicMatcher(matcherConfig, matcherStore);
 
   }
 
@@ -123,8 +123,8 @@ public class BritService extends Service<BritConfiguration> {
 
   }
 
-  private BritService() {
-
+  public BritService(Matcher matcher) {
+    this.matcher = matcher;
   }
 
   @Override
@@ -140,7 +140,7 @@ public class BritService extends Service<BritConfiguration> {
     log.info("Scanning environment...");
 
     // Configure environment
-    environment.scanPackagesForResourcesAndProviders(PublicBritResource.class);
+    environment.addResource(new PublicBritResource(matcher));
 
     // Health checks
     environment.addHealthCheck(new SiteHealthCheck());
