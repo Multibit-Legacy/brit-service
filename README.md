@@ -35,6 +35,16 @@ use the HEAD of the `develop` branch.
 $ mvn clean install
 ```
 
+### BRIT server config
+The BRIT server uses a PGP key to authenticate the requests sent to it.
+This needs to be stored in a PGP secret keyring stored exactly here:
+/var/brit/matcher/gpg/secring.gpg
+
+You may need to open up the permissions on the folders in /var/brit and its subdirectories using
+sudo chmod a+wx brit
+etc
+
+
 ### Inside an IDE
 
 Import the project as a Maven project in the usual manner.
