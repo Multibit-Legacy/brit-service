@@ -135,7 +135,7 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(addressList).isNotNull();
 
     // Get the replay date for the wallet
-    Date replayDate = plainMatcherResponse.getReplayDate();
+    Date replayDate = plainMatcherResponse.getReplayDate().get();
     assertThat(replayDate).isNotNull();
 
   }

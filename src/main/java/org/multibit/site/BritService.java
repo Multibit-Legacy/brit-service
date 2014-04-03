@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * <p>Service to provide the following to application:</p>
@@ -55,9 +54,6 @@ public class BritService extends Service<BritConfiguration> {
     final char[] password = readPassword();
 
     Matcher matcher = newMatcher(password);
-
-    // Clear the password
-    Arrays.fill(password, ' ');
 
     Preconditions.checkNotNull(matcher, "'matcher' must be present");
 
