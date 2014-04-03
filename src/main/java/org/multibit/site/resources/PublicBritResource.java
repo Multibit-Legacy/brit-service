@@ -48,6 +48,7 @@ public class PublicBritResource extends BaseResource {
   @CacheControl(noCache = true)
   public Response getPublicKey() throws IOException {
 
+    // TODO Implement in-memory caching of this
     String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
 
     return Response
@@ -68,7 +69,7 @@ public class PublicBritResource extends BaseResource {
   @Consumes("application/octet-stream")
   @Timed
   @CacheControl(noCache = true)
-  public Response submitWalletId(byte[] payload) throws Exception {
+  public Response submitEncryptedPayerRequest(byte[] payload) throws Exception {
 
     EncryptedPayerRequest encryptedPayerRequest = new EncryptedPayerRequest(payload);
 
