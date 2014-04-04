@@ -36,17 +36,25 @@ public class PublicBritResource extends BaseResource {
 
   private static final Logger log = LoggerFactory.getLogger(PublicBritResource.class);
 
+  /**
+   * The maximum length of the payload (typical value is 680 bytes)
+   */
+  private final static int MAX_PAYLOAD_LENGTH = 1500;
+
   private final Matcher matcher;
 
   private final MessageDigest sha1Digest;
 
+  private final String matcherPublicKey;
+
   /**
    * @param matcher The Matcher
    */
-  public PublicBritResource(Matcher matcher) throws NoSuchAlgorithmException {
+  public PublicBritResource(Matcher matcher) throws NoSuchAlgorithmException, IOException {
     this.matcher = matcher;
 
     sha1Digest = MessageDigest.getInstance("SHA1");
+    matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
 
   }
 
@@ -62,9 +70,6 @@ public class PublicBritResource extends BaseResource {
   @Timed
   @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.DAYS)
   public Response getPublicKey() throws IOException {
-
-    // TODO Implement in-memory caching of this
-    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
 
     return Response
       .ok(matcherPublicKey)
@@ -87,6 +92,7 @@ public class PublicBritResource extends BaseResource {
   public Response submitEncryptedPayerRequest(String payload) throws Exception {
 
     Preconditions.checkNotNull(payload, "'payload' must be present");
+    Preconditions.checkState(payload.length() < MAX_PAYLOAD_LENGTH, "'payload' is too long");
 
     EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload.getBytes(Charsets.UTF_8));
 
@@ -112,6 +118,7 @@ public class PublicBritResource extends BaseResource {
   public Response submitEncryptedPayerRequest(byte[] payload) {
 
     Preconditions.checkNotNull(payload, "'payload' must be present");
+    Preconditions.checkState(payload.length < MAX_PAYLOAD_LENGTH, "'payload' is too long");
 
     EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
 
@@ -122,7 +129,7 @@ public class PublicBritResource extends BaseResource {
 
   }
 
-  public EncryptedMatcherResponse newMatcherResponse(byte[] payload) {
+  private EncryptedMatcherResponse newMatcherResponse(byte[] payload) {
 
     // Check the cache
     byte[] sha1 = sha1Digest.digest(payload);

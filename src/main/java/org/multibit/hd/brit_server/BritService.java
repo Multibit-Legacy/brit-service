@@ -9,6 +9,7 @@ import org.eclipse.jetty.server.session.SessionHandler;
 import org.multibit.hd.brit.matcher.*;
 import org.multibit.hd.brit_server.health.SiteHealthCheck;
 import org.multibit.hd.brit_server.resources.PublicBritResource;
+import org.multibit.hd.brit_server.resources.RuntimeExceptionMapper;
 import org.multibit.hd.brit_server.servlets.AddressThrottlingFilter;
 import org.multibit.hd.brit_server.servlets.SafeLocaleFilter;
 import org.slf4j.Logger;
@@ -145,6 +146,7 @@ public class BritService extends Service<BritConfiguration> {
 
     // Providers
     environment.addProvider(new ViewMessageBodyWriter());
+    environment.addProvider(new RuntimeExceptionMapper());
 
     // Filters
     environment.addFilter(new SafeLocaleFilter(), "/*");
