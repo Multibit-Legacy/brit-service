@@ -88,12 +88,12 @@ public class BritService extends Service<BritConfiguration> {
       System.out.println(testCrypto);
 
       if (!"OK".equals(testCrypto)) {
-        System.err.print("FAIL");
+        System.err.println("FAIL");
         System.exit(-1);
       }
 
     } catch (PGPException e) {
-      System.err.print("FAIL (" + e.getMessage() + "). Checksum means password is incorrect.");
+      System.err.println("FAIL (" + e.getMessage() + "). Checksum means password is incorrect.");
       System.exit(-1);
     }
 
