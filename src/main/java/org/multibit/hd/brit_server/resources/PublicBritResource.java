@@ -1,4 +1,4 @@
-package org.multibit.site.resources;
+package org.multibit.hd.brit_server.resources;
 
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
@@ -8,7 +8,7 @@ import org.multibit.hd.brit.dto.EncryptedPayerRequest;
 import org.multibit.hd.brit.dto.MatcherResponse;
 import org.multibit.hd.brit.dto.PayerRequest;
 import org.multibit.hd.brit.matcher.Matcher;
-import org.multibit.site.utils.StreamUtils;
+import org.multibit.hd.brit_server.utils.StreamUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

@@ -1,4 +1,4 @@
-package org.multibit.site.health;
+package org.multibit.hd.brit_server.health;
 
 /**
  * <p>HealthCheck to provide the following to application:</p>

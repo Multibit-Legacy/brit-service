@@ -1,4 +1,4 @@
-package org.multibit.site.resources;
+package org.multibit.hd.brit_server.resources;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;

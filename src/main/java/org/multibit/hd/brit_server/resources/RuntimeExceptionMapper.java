@@ -1,4 +1,4 @@
-package org.multibit.site.resources;
+package org.multibit.hd.brit_server.resources;
 
 import com.sun.jersey.api.core.HttpContext;
 import org.slf4j.Logger;

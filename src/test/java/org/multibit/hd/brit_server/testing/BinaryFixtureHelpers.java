@@ -1,4 +1,4 @@
-package org.multibit.site.testing;
+package org.multibit.hd.brit_server.testing;
 
 import com.google.common.io.Resources;
 

@@ -1,4 +1,4 @@
-package org.multibit.site.resources;
+package org.multibit.hd.brit_server.resources;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -14,9 +14,9 @@ import org.multibit.hd.brit.payer.PayerConfig;
 import org.multibit.hd.brit.payer.Payers;
 import org.multibit.hd.brit.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.seed_phrase.SeedPhraseGenerator;
+import org.multibit.hd.brit_server.testing.FixtureUtils;
 import org.multibit.hd.brit.utils.FileUtils;
-import org.multibit.site.testing.FixtureAsserts;
-import org.multibit.site.testing.FixtureUtils;
+import org.multibit.hd.brit_server.testing.FixtureAsserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -185,7 +185,7 @@ public class PublicBritResourceTest extends ResourceTest {
   private Matcher createTestMatcher() throws Exception {
 
     // Find the example Matcher PGP secret key ring file
-    File matcherSecretKeyFile = FixtureUtils.makeFile("",TEST_MATCHER_SECRET_KEYRING_FILE);
+    File matcherSecretKeyFile = FixtureUtils.makeFile("", TEST_MATCHER_SECRET_KEYRING_FILE);
     MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, TEST_DATA_PASSWORD);
 
     // Create a random temporary directory for the Matcher store to use

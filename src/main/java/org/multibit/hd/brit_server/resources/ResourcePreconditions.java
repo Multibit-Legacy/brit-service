@@ -1,4 +1,4 @@
-package org.multibit.site.resources;
+package org.multibit.hd.brit_server.resources;
 
 import com.google.common.base.Optional;
 import org.slf4j.Logger;

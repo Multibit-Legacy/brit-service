@@ -1,4 +1,4 @@
-package org.multibit.site;
+package org.multibit.hd.brit_server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;

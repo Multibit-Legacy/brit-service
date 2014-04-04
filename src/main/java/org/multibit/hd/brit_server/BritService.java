@@ -1,4 +1,4 @@
-package org.multibit.site;
+package org.multibit.hd.brit_server;
 
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.Service;
@@ -7,9 +7,9 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewMessageBodyWriter;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.multibit.hd.brit.matcher.*;
-import org.multibit.site.health.SiteHealthCheck;
-import org.multibit.site.resources.PublicBritResource;
-import org.multibit.site.servlets.SafeLocaleFilter;
+import org.multibit.hd.brit_server.health.SiteHealthCheck;
+import org.multibit.hd.brit_server.resources.PublicBritResource;
+import org.multibit.hd.brit_server.servlets.SafeLocaleFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,11 +108,12 @@ public class BritService extends Service<BritConfiguration> {
       System.err.println("Could not obtain a console. Assuming an IDE and test data.");
       password = "password".toCharArray();
     } else {
-      password = console.readPassword("[%s]", "Password:");
+      password = console.readPassword("%s", "Enter password:");
       if (password == null) {
         System.err.println("Could not read the password.");
         System.exit(-1);
       }
+      System.out.println("Working...");
     }
 
     return password;

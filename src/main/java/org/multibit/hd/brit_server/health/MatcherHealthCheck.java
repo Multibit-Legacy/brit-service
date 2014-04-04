@@ -1,4 +1,4 @@
-package org.multibit.site.health;
+package org.multibit.hd.brit_server.health;
 
 import com.yammer.metrics.core.HealthCheck;
 

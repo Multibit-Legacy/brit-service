@@ -1,4 +1,4 @@
-package org.multibit.site.caches;
+package org.multibit.hd.brit_server.caches;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;

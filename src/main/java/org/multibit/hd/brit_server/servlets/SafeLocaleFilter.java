@@ -1,4 +1,4 @@
-package org.multibit.site.servlets;
+package org.multibit.hd.brit_server.servlets;
 
 /**
  * <p>Servlet filter to provide the following to application:</p>

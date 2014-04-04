@@ -1,4 +1,4 @@
-package org.multibit.site.utils;
+package org.multibit.hd.brit_server.utils;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;

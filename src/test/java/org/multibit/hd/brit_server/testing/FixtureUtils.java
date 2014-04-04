@@ -1,4 +1,4 @@
-package org.multibit.site.testing;
+package org.multibit.hd.brit_server.testing;
 
 import java.io.File;
 

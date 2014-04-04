@@ -1,4 +1,4 @@
-package org.multibit.site.servlets;
+package org.multibit.hd.brit_server.servlets;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

@@ -45,7 +45,17 @@
         <version>1.6</version>
         <configuration>
           <createDependencyReducedPom>true</createDependencyReducedPom>
+          <artifactSet>
+            <excludes>
+              <!-- Test libraries should be excluded -->
+              <exclude>junit:junit</exclude>
+              <exclude>org.mockito:*</exclude>
+              <!-- Bouncy Castle Security Provider must be external to ensure accepted signature -->
+              <exclude>org.bouncycastle:bcprov-jdk16:*</exclude>
+            </excludes>
+          </artifactSet>
           <filters>
+            <!-- Filter out JAR signatures since they are no longer valid -->
             <filter>
               <artifact>*:*</artifact>
               <excludes>
@@ -67,13 +77,52 @@
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>org.multibit.site.BritService</mainClass>
+                  <mainClass>org.multibit.hd.brit_server.BritService</mainClass>
                 </transformer>
               </transformers>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
+      <!-- Java sign the JAR to ensure security providers work correctly -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jarsigner-plugin</artifactId>
+        <version>1.3.2</version>
+        <executions>
+          <execution>
+            <id>sign</id>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <keystore>../examplestore</keystore>
+          <alias>signFiles</alias>
+          <storepass>example</storepass>
+          <keypass>example</keypass>
+        </configuration>
+      </plugin>
+
+      <!-- GPG sign the final JAR to prove it is the correct one
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      -->
+
     </plugins>
   </build>
 
