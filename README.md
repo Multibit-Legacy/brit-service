@@ -68,7 +68,9 @@ To run up BRIT server for real you need to run it outside of an IDE which introd
 as Bouncy Castle can only be loaded from a trusted source. In the case of a JAR this means that it must be signed with a certificate
 that has in turn been signed by one of the trusted Certificate Authorities (CAs) in the `cacerts` file of the JRE.
 
-Fortunately the Bouncy Castle team have done this, but it does change the launch command line:
+Fortunately the Bouncy Castle team have done this so the `bcprov-jdk16-1.46.jar` must be external to the server JAR.
+
+This changes the  launch command line from a standard Dropwizard as follows:
 
     cd <project root>
     mvn clean install
@@ -76,6 +78,8 @@ Fortunately the Bouncy Castle team have done this, but it does change the launch
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
 as found in `pom.xml` (e.g. "develop-SNAPSHOT" or "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
+
+The Bouncy Castle security provider library should be in the project root for development.
 
 On startup you will need to provide the passphrase for the Matcher key store. It is not persisted anywhere.
 
