@@ -30,8 +30,8 @@ A quick way to install Maven on Mac is to use HomeBrew.
 
 ## Manually build and install MultiBit HD BRIT support library (mbhd-brit)
 
-At present it is necessary to checkout [multibit-hd](https://github.com/bitcoin-solutions/multibit-hd/) and build it manually. You will need to
-use the HEAD of the `develop` branch.
+At present it is necessary to checkout [multibit-hd](https://github.com/bitcoin-solutions/multibit-hd/) and
+build it manually. You will need to use the HEAD of the `develop` branch.
 
     mvn clean install
 
@@ -47,6 +47,9 @@ You will need to open up the permissions on the folders in `/var/brit` and its s
 
     sudo chmod a+wx -R /var/brit
 
+To get a developer environment up and running just copy these values from `src/test/resources/matcher` into the
+external location.
+
 ### Inside an IDE
 
 Import the project as a Maven project in the usual manner.
@@ -57,52 +60,57 @@ that passes in `server brit-config.yml` as the Program Arguments.
 Open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
 public key.
 
-At this stage you can perform most development tasks.
+At this stage you can perform most development tasks and you won't be prompted for a password.
 
 ## Running BRIT server in Production
 
 To run up BRIT server for real you need to run it outside of an IDE which introduces some security issues. Security Providers such
-as Bouncy Castle can only be loaded from a trusted environment. In the case of a JAR this means that it must be signed with a certificate
+as Bouncy Castle can only be loaded from a trusted source. In the case of a JAR this means that it must be signed with a certificate
 that has in turn been signed by one of the trusted Certificate Authorities (CAs) in the `cacerts` file of the JRE.
 
-To get this running with a self-signed certificate you need to jump through some key signing hoops as follows:
-
-1) Create a key store for the self-signed certificate
-
-    keytool -selfcert -alias signfiles -keystore examplestore
-
-2) Verify the contents of the key store
-
-    keytool -list -keystore examplestore
-
-3) Generate a key for signing files and put it into the key store
-
-    keytool -genkey -alias signfiles -keystore examplestore
-
-4) Sign the JAR
-
-    jarsigner -keystore examplestore -signedjar sCount.jar Count.jar signfiles
-
-5)
-
-### Build the JAR and sign it
-
-All the JAR signing work is already in place in the `pom.xml` so assuming that you've prepared your key store correctly you can build
-it as follows:
+Fortunately the Bouncy Castle team have done this, but it does change the launch command line:
 
     cd <project root>
     mvn clean install
-    java -jar target/brit-server-<version>.jar server brit-config.yml
+    java -cp "bcprov-jdk16-1.46.jar:target/brit-server-<version>.jar" org.multibit.hd.brit_server.BritService server brit-config.yml
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
-as found in `pom.xml` (e.g. "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
+as found in `pom.xml` (e.g. "develop-SNAPSHOT" or "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
 
 On startup you will need to provide the passphrase for the Matcher key store. It is not persisted anywhere.
 
 All commands will work on *nix without modification, use \ instead of / for Windows.
 
-Open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
+## Test the BRIT server using a browser REST plugin
+
+First open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
 public key. Note it is port 9090 not the usual 8080.
+
+If you are running Chrome and have the excellent Advanced REST Client extension installed then you can build a POST request for the
+development environment as follows:
+
+    Host: http://localhost:9090/brit
+    Content-Type: text/plain
+    Accept: application/octet-stream
+
+    -----BEGIN PGP MESSAGE-----
+    Version: BCPG v1.46
+
+    hQEMA+aIld5YYUzuAQf9GkIWCi7FKON9JzdRzpWurjCTiqEizTxxL+Wu67D5eTMD
+    MKm1Cz4pGjq5G9j0rtxBZCn7ua/qt6QWBlPFuYQWdbAN2gsLVUgcejHMjD2MCfZc
+    eAAAi4moOZE4r22hKKIpvaj/4dMp8G7pBsHIKmMAJCWnUaPFB/FQJx6KQ4i8Hh+W
+    OvE0Fi2CHNLf9zELSMN3IZT3lueuZzxmeg2VTNB6H3dVRvp+HiKTlJ4Mrz5iXx6s
+    lh225PsprHWWY7sY74820sFjcrC3r7ITRmBHVk3uAUvlhLcE2Kfnvcsks/lylLSX
+    Nqm8p2KGiji9FALeRbjEzNAZ1VNY9PMeSbbTkTg+YNKIAZwnU0uKwf78XbVLigNy
+    YOSuwRiXU8HUIfe6hViawYvlAD/HsgIGi/5MMpcYu1Ehahjz4p4VLYJ37lHvMnHd
+    d/0IjDb/jb1HYXqUbRyJeAlU89TMJMOxL7PnYvAnGZPZvb7wQMcf4WjvbjqIDJ+U
+    Q5zVwa4UtipOlo7ItzOfzRTW5RHiu56ZIg==
+    =twKa
+    -----END PGP MESSAGE-----
+
+If all goes well the response will be a `201_CREATED` with some gibberish to decrypt. The client and server are in synch.
+
+A `400_BAD_REQUEST` indicates that the BRIT server is not able to decrypt the PayerRequest.
 
 ### Where does the ASCII art come from?
 

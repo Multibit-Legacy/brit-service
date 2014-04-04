@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
-import org.bouncycastle.openpgp.PGPException;
 import org.multibit.hd.brit.dto.EncryptedMatcherResponse;
 import org.multibit.hd.brit.dto.EncryptedPayerRequest;
 import org.multibit.hd.brit.dto.MatcherResponse;
@@ -60,11 +59,11 @@ public class PublicBritResource extends BaseResource {
   }
 
   /**
-   * Allow a Payer to submit their wallet ID
+   * Allow a Payer to submit their wallet ID as an ASCII armored payload (useful for REST clients)
    *
    * @param payload The encrypted Payer request payload
    *
-   * @return A localised view containing HTML
+   * @return The encrypted Matcher response (in binary)
    */
   @POST
   @Consumes("text/plain")
@@ -73,46 +72,61 @@ public class PublicBritResource extends BaseResource {
   @CacheControl(noCache = true)
   public Response submitEncryptedPayerRequest(String payload) throws Exception {
 
-    return submitEncryptedPayerRequest(payload.getBytes(Charsets.UTF_8));
+    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload.getBytes(Charsets.UTF_8));
+
+    return Response
+      .created(UriBuilder.fromPath("/brit").build())
+      .entity(encryptedMatcherResponse.getPayload())
+      .build();
 
   }
 
   /**
-   * Allow a Payer to submit their wallet ID
+   * Allow a Payer to submit their wallet ID as a binary payload
    *
    * @param payload The encrypted Payer request payload
    *
-   * @return A localised view containing HTML
+   * @return The encrypted Matcher response (in binary)
    */
   @POST
   @Consumes("application/octet-stream")
   @Produces("application/octet-stream")
   @Timed
   @CacheControl(noCache = true)
-  public Response submitEncryptedPayerRequest(byte[] payload) throws Exception {
+  public Response submitEncryptedPayerRequest(byte[] payload) {
 
-    EncryptedPayerRequest encryptedPayerRequest = new EncryptedPayerRequest(payload);
-
-    final PayerRequest matcherPayerRequest;
-    try {
-      // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
-      matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
-    } catch (PGPException e) {
-      return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-
-    // Get the matcher to process the EncryptedPayerRequest
-    MatcherResponse matcherResponse = matcher.process(matcherPayerRequest);
-    Preconditions.checkNotNull(matcherResponse,"'matcherResponse' must be present");
-
-    // Encrypt the MatcherResponse with the AES session key
-    EncryptedMatcherResponse encryptedMatcherResponse = matcher.encryptMatcherResponse(matcherResponse);
-    Preconditions.checkNotNull(encryptedMatcherResponse,"'encryptedMatcherResponse' must be present");
+    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
 
     return Response
       .created(UriBuilder.fromPath("/brit").build())
       .entity(encryptedMatcherResponse.getPayload())
       .build();
+
+  }
+
+  public EncryptedMatcherResponse newMatcherResponse(byte[] payload) {
+
+    EncryptedPayerRequest encryptedPayerRequest = new EncryptedPayerRequest(payload);
+
+    final EncryptedMatcherResponse encryptedMatcherResponse;
+    try {
+      // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
+      final PayerRequest matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
+
+      // Get the matcher to process the EncryptedPayerRequest
+      final MatcherResponse matcherResponse = matcher.process(matcherPayerRequest);
+      Preconditions.checkNotNull(matcherResponse, "'matcherResponse' must be present");
+
+      // Encrypt the MatcherResponse with the AES session key
+      encryptedMatcherResponse = matcher.encryptMatcherResponse(matcherResponse);
+      Preconditions.checkNotNull(encryptedMatcherResponse, "'encryptedMatcherResponse' must be present");
+
+    } catch (Exception e) {
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
+
+    return encryptedMatcherResponse;
+
 
   }
 
