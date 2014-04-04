@@ -13,8 +13,9 @@ import java.util.concurrent.TimeUnit;
  * <ul>
  * <li>In-memory thread-safe cache for long-lived artifacts generated periodically</li>
  * </ul>
+ * <p>This protects against a single IP address hammering the BRIT server</p>
  *
- * @since 3.1.0
+ * @since 0.0.1
  */
 public enum AddressThrottlingCache {
 
@@ -41,7 +42,8 @@ public enum AddressThrottlingCache {
     // Store a few items permanently
     addressCache = CacheBuilder
       .newBuilder()
-      .expireAfterWrite(1, TimeUnit.MINUTES)
+      .expireAfterWrite(5, TimeUnit.SECONDS) // Developer setting
+      //.expireAfterWrite(1, TimeUnit.MINUTES)
       .maximumSize(10_000)
       .build();
 

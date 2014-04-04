@@ -17,7 +17,7 @@ import javax.ws.rs.ext.Provider;
  * </ul>
  *
  * @since 0.0.1
- *         
+ *  
  */
 @Provider
 public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
@@ -36,18 +36,27 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
       .build();
 
     // Check for any specific handling
-    if (runtime instanceof WebApplicationException) {
+    if (runtime instanceof IllegalArgumentException
+      || runtime instanceof IllegalStateException) {
+      return Response
+        .status(Response.Status.BAD_REQUEST)
+        .build();
+    }
 
+    // Web application exception needs extra interpretation
+    if (runtime instanceof WebApplicationException) {
       return handleWebApplicationException(runtime, defaultResponse);
     }
 
     // Use the default
-    log.error(runtime.getMessage(),runtime);
+    log.error(runtime.getMessage(), runtime);
+
     return defaultResponse;
 
   }
 
   private Response handleWebApplicationException(RuntimeException exception, Response defaultResponse) {
+
     WebApplicationException webAppException = (WebApplicationException) exception;
 
     // No logging
@@ -67,7 +76,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
     // Warn logging
 
     // Error logging
-    log.error(exception.getMessage(),exception);
+    log.error(exception.getMessage(), exception);
 
     return defaultResponse;
   }
