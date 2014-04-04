@@ -11,7 +11,6 @@ import org.multibit.hd.brit.dto.MatcherResponse;
 import org.multibit.hd.brit.dto.PayerRequest;
 import org.multibit.hd.brit.matcher.Matcher;
 import org.multibit.hd.brit_server.caches.MatcherResponseCache;
-import org.multibit.hd.brit_server.utils.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +49,12 @@ public class PublicBritResource extends BaseResource {
   /**
    * @param matcher The Matcher
    */
-  public PublicBritResource(Matcher matcher) throws NoSuchAlgorithmException, IOException {
-    this.matcher = matcher;
+  public PublicBritResource(Matcher matcher, String matcherPublicKey) throws NoSuchAlgorithmException, IOException {
 
-    sha1Digest = MessageDigest.getInstance("SHA1");
-    matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
+    this.matcher = matcher;
+    this.matcherPublicKey = matcherPublicKey;
+
+    this.sha1Digest = MessageDigest.getInstance("SHA1");
 
   }
 

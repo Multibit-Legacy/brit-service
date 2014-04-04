@@ -15,9 +15,10 @@ import org.multibit.hd.brit.payer.PayerConfig;
 import org.multibit.hd.brit.payer.Payers;
 import org.multibit.hd.brit.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit_server.testing.FixtureUtils;
 import org.multibit.hd.brit.utils.FileUtils;
 import org.multibit.hd.brit_server.testing.FixtureAsserts;
+import org.multibit.hd.brit_server.testing.FixtureUtils;
+import org.multibit.hd.brit_server.utils.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,9 @@ public class PublicBritResourceTest extends ResourceTest {
 
     Matcher matcher = createTestMatcher();
 
-    testObject = new PublicBritResource(matcher);
+    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
+
+    testObject = new PublicBritResource(matcher, matcherPublicKey);
 
     // Configure resources
     addResource(testObject);
