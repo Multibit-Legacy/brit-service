@@ -1,8 +1,10 @@
 package org.multibit.hd.brit_server.resources;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
+import org.bouncycastle.openpgp.PGPException;
 import org.multibit.hd.brit.dto.EncryptedMatcherResponse;
 import org.multibit.hd.brit.dto.EncryptedPayerRequest;
 import org.multibit.hd.brit.dto.MatcherResponse;
@@ -42,8 +44,8 @@ public class PublicBritResource extends BaseResource {
    */
   @GET
   @Path("/public-key")
-  @Produces("text/plain")
   @Consumes("text/plain")
+  @Produces("text/plain")
   @Timed
   @CacheControl(noCache = true)
   public Response getPublicKey() throws IOException {
@@ -65,16 +67,39 @@ public class PublicBritResource extends BaseResource {
    * @return A localised view containing HTML
    */
   @POST
+  @Consumes("text/plain")
   @Produces("application/octet-stream")
+  @Timed
+  @CacheControl(noCache = true)
+  public Response submitEncryptedPayerRequest(String payload) throws Exception {
+
+    return submitEncryptedPayerRequest(payload.getBytes(Charsets.UTF_8));
+
+  }
+
+  /**
+   * Allow a Payer to submit their wallet ID
+   *
+   * @param payload The encrypted Payer request payload
+   *
+   * @return A localised view containing HTML
+   */
+  @POST
   @Consumes("application/octet-stream")
+  @Produces("application/octet-stream")
   @Timed
   @CacheControl(noCache = true)
   public Response submitEncryptedPayerRequest(byte[] payload) throws Exception {
 
     EncryptedPayerRequest encryptedPayerRequest = new EncryptedPayerRequest(payload);
 
-    // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
-    PayerRequest matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
+    final PayerRequest matcherPayerRequest;
+    try {
+      // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
+      matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
+    } catch (PGPException e) {
+      return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
     // Get the matcher to process the EncryptedPayerRequest
     MatcherResponse matcherResponse = matcher.process(matcherPayerRequest);

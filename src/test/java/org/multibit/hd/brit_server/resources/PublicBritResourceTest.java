@@ -1,5 +1,6 @@
 package org.multibit.hd.brit_server.resources;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.yammer.dropwizard.testing.ResourceTest;
@@ -92,7 +93,7 @@ public class PublicBritResourceTest extends ResourceTest {
   }
 
   @Test
-  public void POST_EncryptedPayerRequest() throws Exception {
+  public void POST_EncryptedPayerRequest_Binary() throws Exception {
 
     // Create a payer
     Payer payer = newTestPayer();
@@ -117,6 +118,55 @@ public class PublicBritResourceTest extends ResourceTest {
     byte[] actualResponse = client()
       .resource("/brit")
       .header("Content-Type", "application/octet-stream")
+      .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
+      .entity(payload)
+      .post(byte[].class);
+
+    assertThat(actualResponse.length).isGreaterThanOrEqualTo(20);
+
+    // Build the encrypted Matcher response
+    EncryptedMatcherResponse encryptedMatcherResponse = new EncryptedMatcherResponse(actualResponse);
+
+    // Payer can decrypt the encryptedMatcherResponse because it knows the BRITWalletId and session id
+    MatcherResponse plainMatcherResponse = payer.decryptMatcherResponse(encryptedMatcherResponse);
+    assertThat(plainMatcherResponse).isNotNull();
+
+    // Get the list of addresses the Payer will use
+    List<String> addressList = plainMatcherResponse.getAddressList();
+    assertThat(addressList).isNotNull();
+
+    // Get the replay date for the wallet
+    Date replayDate = plainMatcherResponse.getReplayDate().get();
+    assertThat(replayDate).isNotNull();
+
+  }
+
+  @Test
+  public void POST_EncryptedPayerRequest_String() throws Exception {
+
+    // Create a payer
+    Payer payer = newTestPayer();
+
+    BRITWalletId britWalletId = newBritWalletId();
+
+    // Create a random session id
+    byte[] sessionId = newSessionId();
+
+    // Create a first transaction date (in real life this would come from a wallet)
+    Optional<Date> firstTransactionDateOptional = Optional.of(new Date());
+
+    // Ask the payer to create an EncryptedPayerRequest containing a BRITWalletId, a session id and a firstTransactionDate
+    PayerRequest payerRequest = payer.newPayerRequest(britWalletId, sessionId, firstTransactionDateOptional);
+    assertThat(payerRequest).isNotNull();
+    // Encrypt the PayerRequest with the Matcher PGP public key.
+    EncryptedPayerRequest encryptedPayerRequest = payer.encryptPayerRequest(payerRequest);
+
+    String payload = new String(encryptedPayerRequest.getPayload(), Charsets.UTF_8);
+
+    // Send the encrypted request to the Matcher
+    byte[] actualResponse = client()
+      .resource("/brit")
+      .header("Content-Type", "text/plain")
       .accept(MediaType.APPLICATION_OCTET_STREAM_TYPE)
       .entity(payload)
       .post(byte[].class);
