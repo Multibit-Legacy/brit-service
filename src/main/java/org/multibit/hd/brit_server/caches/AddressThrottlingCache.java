@@ -30,7 +30,7 @@ public enum AddressThrottlingCache {
   }
 
   /**
-   * Resets the cache and allows the expiry time to be set (perhaps for testing)
+   * Resets the cache
    */
   public AddressThrottlingCache reset() {
 

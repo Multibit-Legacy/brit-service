@@ -30,7 +30,7 @@ public enum MatcherResponseCache {
   }
 
   /**
-   * Resets the cache and allows the expiry time to be set (perhaps for testing)
+   * Resets the cache
    */
   public MatcherResponseCache reset() {
 
@@ -43,8 +43,8 @@ public enum MatcherResponseCache {
     // while allowing a developer to make progress with changes
     pageCache = CacheBuilder
       .newBuilder()
-      .maximumSize(1_000)
-      .expireAfterAccess(5, TimeUnit.SECONDS)
+      .maximumSize(10_000)
+      .expireAfterAccess(1, TimeUnit.MINUTES)
       .build();
 
     return INSTANCE;
