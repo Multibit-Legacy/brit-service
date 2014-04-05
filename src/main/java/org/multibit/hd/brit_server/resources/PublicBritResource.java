@@ -163,6 +163,7 @@ public class PublicBritResource extends BaseResource {
       MatcherResponseCache.INSTANCE.put(sha1, encryptedMatcherResponse);
 
     } catch (Exception e) {
+      log.error(e.getMessage(), e);
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 

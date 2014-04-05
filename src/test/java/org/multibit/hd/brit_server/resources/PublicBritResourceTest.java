@@ -2,7 +2,7 @@ package org.multibit.hd.brit_server.resources;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.yammer.dropwizard.testing.ResourceTest;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -135,8 +135,8 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(plainMatcherResponse).isNotNull();
 
     // Get the list of addresses the Payer will use
-    List<String> addressList = plainMatcherResponse.getAddressList();
-    assertThat(addressList).isNotNull();
+    Set<String> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
+    assertThat(bitcoinAddresses).isNotNull();
 
     // Get the replay date for the wallet
     Date replayDate = plainMatcherResponse.getReplayDate().get();
@@ -184,8 +184,8 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(plainMatcherResponse).isNotNull();
 
     // Get the list of addresses the Payer will use
-    List<String> addressList = plainMatcherResponse.getAddressList();
-    assertThat(addressList).isNotNull();
+    Set<String> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
+    assertThat(bitcoinAddresses).isNotNull();
 
     // Get the replay date for the wallet
     Date replayDate = plainMatcherResponse.getReplayDate().get();
@@ -249,13 +249,13 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(matcher).isNotNull();
 
     // Add some test data for today's bitcoin addresses
-    List<String> bitcoinAddressList = Lists.newArrayList();
-    bitcoinAddressList.add("cat");
-    bitcoinAddressList.add("dog");
-    bitcoinAddressList.add("elephant");
-    bitcoinAddressList.add("worm");
+    Set<String> bitcoinAddresses = Sets.newHashSet();
+    bitcoinAddresses.add("cat");
+    bitcoinAddresses.add("dog");
+    bitcoinAddresses.add("elephant");
+    bitcoinAddresses.add("worm");
 
-    matcherStore.storeBitcoinAddressListForDate(bitcoinAddressList, new Date());
+    matcherStore.storeBitcoinAddressesForDate(bitcoinAddresses, new Date());
 
     return matcher;
   }

@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import com.yammer.dropwizard.config.LoggingFactory;
 import com.yammer.dropwizard.views.ViewMessageBodyWriter;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPublicKey;
@@ -59,6 +60,9 @@ public class BritService extends Service<BritConfiguration> {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
+
+    // Start the logging factory
+    LoggingFactory.bootstrap();
 
     // Securely read the password from the console
     final char[] password = readPassword();
