@@ -1,3 +1,7 @@
+# ###################################### BRIT Server settings ######################################
+
+production: true
+
 # ################################## Dropwizard specific settings ##################################
 
 # Define the HTTP settings

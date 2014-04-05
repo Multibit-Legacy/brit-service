@@ -42,8 +42,7 @@ public enum AddressThrottlingCache {
     // Store a few items permanently
     addressCache = CacheBuilder
       .newBuilder()
-      .expireAfterWrite(5, TimeUnit.SECONDS) // Developer setting
-      //.expireAfterWrite(1, TimeUnit.MINUTES)
+      .expireAfterAccess(1, TimeUnit.MINUTES)
       .maximumSize(10_000)
       .build();
 

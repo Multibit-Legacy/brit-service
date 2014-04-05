@@ -116,7 +116,7 @@ public class PublicBritResourceLoadTest {
       .post(byte[].class);
     log.info("Posted.");
 
-    assertThat(actualResponse.length).isGreaterThanOrEqualTo(20);
+    assertThat(actualResponse.length).describedAs("Check for 204_NO_CONTENT may have address throttling active.").isGreaterThanOrEqualTo(20);
 
     // Build the encrypted Matcher response
     EncryptedMatcherResponse encryptedMatcherResponse = new EncryptedMatcherResponse(actualResponse);
