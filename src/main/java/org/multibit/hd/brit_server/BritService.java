@@ -251,7 +251,13 @@ public class BritService extends Service<BritConfiguration> {
 
     // Filters
     environment.addFilter(new SafeLocaleFilter(), "/*");
-    environment.addFilter(new AddressThrottlingFilter(), "/*");
+    if (britConfiguration.isProduction()) {
+      environment.addFilter(new AddressThrottlingFilter(), "/*");
+    } else {
+      log.warn("******************************************************************************");
+      log.warn("* Address throttling is not active. Use 'production: true' on a live server. *");
+      log.warn("******************************************************************************");
+    }
 
     // Session handler
     environment.setSessionHandler(new SessionHandler());

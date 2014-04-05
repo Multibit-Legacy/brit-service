@@ -10,6 +10,7 @@ package org.multibit.hd.brit_server.servlets;
 import org.multibit.hd.brit_server.caches.AddressThrottlingCache;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AddressThrottlingFilter implements Filter {
@@ -30,6 +31,13 @@ public class AddressThrottlingFilter implements Filter {
     }
 
     // If not new then not calling the chain will block the request from proceeding
+    if (response instanceof HttpServletResponse) {
+
+      HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+      httpResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+    }
 
   }
 

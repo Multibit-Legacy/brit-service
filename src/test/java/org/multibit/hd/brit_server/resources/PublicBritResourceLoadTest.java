@@ -22,24 +22,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class PublicBritResourceLoadTest {
 
   private static final Logger log = LoggerFactory.getLogger(PublicBritResourceLoadTest.class);
-
-  public static final String TEST_MATCHER_SECRET_KEYRING_FILE = "/src/test/resources/matcher/gpg/secring.gpg";
-
-  public static final String TEST_MATCHER_PUBLIC_KEY_FILE = "/src/test/resources/matcher/export-to-payer/matcher-key.asc";
-
-  /**
-   * The password used in the generation of the test PGP keys
-   */
-  public static final char[] TEST_DATA_PASSWORD = "password".toCharArray();
-
-  private PublicBritResource testObject;
 
   private SecureRandom secureRandom = new SecureRandom();
 
@@ -60,13 +48,13 @@ public class PublicBritResourceLoadTest {
 
   private void start() {
 
-    int MAX_EXECUTORS = 10;
+    int MAX_EXECUTORS = 200;
 
     ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(5));
 
     for (int i = 0; i < MAX_EXECUTORS; i++) {
 
-      ListenableFuture<MatcherResponse> MatcherResponse = service.submit(new Callable<MatcherResponse>() {
+      ListenableFuture<MatcherResponse> matcherResponse = service.submit(new Callable<MatcherResponse>() {
 
         @Override
         public MatcherResponse call() throws Exception {
@@ -76,7 +64,7 @@ public class PublicBritResourceLoadTest {
         }
       });
 
-      Futures.addCallback(MatcherResponse, new FutureCallback<MatcherResponse>() {
+      Futures.addCallback(matcherResponse, new FutureCallback<MatcherResponse>() {
 
         public void onSuccess(MatcherResponse matcherResponse) {
           log.info("SUCCESS. Address 0: {}", matcherResponse.getBitcoinAddresses().iterator().next());
@@ -87,9 +75,6 @@ public class PublicBritResourceLoadTest {
         }
       });
 
-      // Let the other threads work
-      Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
-
     }
   }
 
@@ -99,7 +84,7 @@ public class PublicBritResourceLoadTest {
    * @return The Matcher response from the BRIT server
    *
    */
-  public MatcherResponse createAndRegisterWalletId() throws Exception {
+  public synchronized MatcherResponse createAndRegisterWalletId() throws Exception {
 
     // Create a payer
     Payer payer = newTestPayer();

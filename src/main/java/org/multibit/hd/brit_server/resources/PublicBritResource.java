@@ -151,11 +151,11 @@ public class PublicBritResource extends BaseResource {
       // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
       final PayerRequest matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
 
-      // Get the matcher to process the EncryptedPayerRequest
+      // Get the Matcher to process the EncryptedPayerRequest
       final MatcherResponse matcherResponse = matcher.process(matcherPayerRequest);
       Preconditions.checkNotNull(matcherResponse, "'matcherResponse' must be present");
 
-      // Encrypt the MatcherResponse with the AES session key
+      // Encrypt the Matcher response with the AES session key
       encryptedMatcherResponse = matcher.encryptMatcherResponse(matcherResponse);
       Preconditions.checkNotNull(encryptedMatcherResponse, "'encryptedMatcherResponse' must be present");
 
@@ -166,6 +166,8 @@ public class PublicBritResource extends BaseResource {
       log.error(e.getMessage(), e);
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
+
+    Preconditions.checkState(encryptedMatcherResponse.getPayload().length > 0, "'payload' must be present");
 
     return encryptedMatcherResponse;
 
