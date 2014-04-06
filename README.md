@@ -8,6 +8,17 @@ From a technical point of view this project uses
 * [Maven](http://maven.apache.org/) - Build system
 * [Dropwizard](http://dropwizard.io) - Self-contained web server
 
+## Read more about BRIT
+
+We have provided an [overview of BRIT](src/main/doc/Overview-of-BRIT.md) and detailed instructions for each of
+the actors involved:
+
+* [Creating Redeemer wallets](src/main/doc/Redeemer-1-Creating-Bitcoin-wallets.md)
+* [Setting up a Matcher (BRIT server)](src/main/doc/Matcher-1-Setting-up.md)
+* [Setting up a Payer](src/main/doc/Payer-1-Setting-up.md)
+
+The rest of this document provides the detailed instructions for running up a BRIT server.
+
 ## Branches
 
 We follow the ["master-develop" branching strategy](http://nvie.com/posts/a-successful-git-branching-model/).
