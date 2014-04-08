@@ -85,7 +85,7 @@ public class BritService extends Service<BritConfiguration> {
       // Attempt to decrypt the test file
       ByteArrayInputStream armoredIn = new ByteArrayInputStream(armoredOut.toByteArray());
       ByteArrayOutputStream decryptedOut = new ByteArrayOutputStream(1024);
-      PGPUtils.decryptFile(armoredIn, decryptedOut, new FileInputStream(matcherSecretKeyringFile), password);
+      PGPUtils.decrypt(armoredIn, decryptedOut, new FileInputStream(matcherSecretKeyringFile), password);
 
       // Verify that the decryption was successful
       String testCrypto = decryptedOut.toString();
