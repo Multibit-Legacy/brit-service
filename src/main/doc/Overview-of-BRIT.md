@@ -181,4 +181,4 @@ Redeemers wish to conceal their earnings as much as possible on a public blockch
 * The Matcher can add and remove Redeemers to the list of candidate Redeemers over time.
 * The Payer can randomise the order of the actual payment, change address and fee addresses
 * The Payer can randomise the number of payments that are bundled up
-* The Payer the user a small discount on the fee amount to effectively expand the amounts to fill up the total key space
+* The Redeemer can accept a small discount on the fee amount to effectively expand the amounts to fill up the total key space
