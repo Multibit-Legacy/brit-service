@@ -15,6 +15,48 @@
   <description>A BRIT server using Dropwizard</description>
   <inceptionYear>2014</inceptionYear>
 
+  <!-- Developer list -->
+  <developers>
+    <developer>
+      <name>Gary Rowe</name>
+      <email>gary.rowe@bitcoin-solutions.co.uk</email>
+      <timezone>0</timezone>
+    </developer>
+  </developers>
+
+  <!-- MIT license -->
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
+  <!-- GitHub for source code management -->
+  <scm>
+    <connection>scm:git:git://github.com/bitcoin-solutions/brit-server.git</connection>
+    <developerConnection>scm:git:git@github.com:bitcoin-solutions/brit-server.git</developerConnection>
+    <url>http://github.com/bitcoin-solutions/brit-server/</url>
+    <tag>develop-SNAPSHOT</tag>
+  </scm>
+
+  <!-- GitHub for issue management -->
+  <issueManagement>
+    <system>github</system>
+    <url>http://github.com/bitcoin-solutions/brit-server/issues#issue/</url>
+  </issueManagement>
+
+  <repositories>
+    <!-- Define the MultiBit staging repository for snapshots -->
+    <repository>
+      <id>mbhd-maven</id>
+      <url>https://raw.githubusercontent.com/bitcoin-solutions/mbhd-maven/master/snapshots</url>
+      <snapshots/>
+    </repository>
+  </repositories>
+
   <!-- Set the version levels for linked dependencies -->
   <properties>
     <dropwizard.version>0.6.2</dropwizard.version>
