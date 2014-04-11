@@ -1,5 +1,7 @@
 ## MultiBit BRIT Server
 
+Build status: [![Build Status](https://travis-ci.org/bitcoin-solutions/brit-server.png?branch=develop)](https://travis-ci.org/bitcoin-solutions/brit-server)
+
 This repo contains the source for the MultiBit BRIT server.
 
 From a technical point of view this project uses
