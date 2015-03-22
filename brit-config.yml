@@ -6,8 +6,8 @@ production: true
 
 # Define the HTTP settings
 http:
-  port: 9090
-  adminPort: 9091
+  port: 7070
+  adminPort: 7071
 
 logging:
 
