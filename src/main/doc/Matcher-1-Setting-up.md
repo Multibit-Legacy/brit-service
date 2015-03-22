@@ -168,11 +168,14 @@ This is OK, you can ignore it.
 
 ## Step 8 Start the Matcher daemon
 
-TODO - merge all the redeemer files into an 'all.txt'.
-TODO - Start the Matcher daemon which:
+Merge all the redeemer files into an 'all.txt'.
+
+Start the Matcher daemon which:
 
 * loads all the Redeemer Bitcoin addresses
 * processes incoming Payer requests
+
+See the brit-server readme.md for full instructions on setting up the brit-server on linux
 
 # Summary
 

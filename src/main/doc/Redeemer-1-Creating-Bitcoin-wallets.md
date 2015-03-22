@@ -38,8 +38,7 @@ In this test example we will add 100 Bitcoin addresses to each of the `redeemer-
 ## Step 3 Export the Bitcoin addresses from the Bitcoin wallets and copy to the Matcher.
 The Redeemers export all their Bitcoin addresses to files.
 
-You can produce a list of all the Bitcoin addresses in a wallet using the Multibit test utility:
-`org.multibit.utils.ListAddresses`, passing it the filename of the wallet you want a listing for.
+You can produce a list of all the Bitcoin addresses in a wallet by copying them out of the wallet.info files (you want all the receiving addresses).
 
 The Redeemers have two Bitcoin wallets and so they will create two files containing each wallet's Bitcoin addresses as follows:
 

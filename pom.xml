@@ -157,7 +157,7 @@
     <dependency>
       <groupId>org.multibit.hd</groupId>
       <artifactId>mbhd-brit</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>develop-SNAPSHOT</version>
     </dependency>
 
     <!-- Test libraries -->

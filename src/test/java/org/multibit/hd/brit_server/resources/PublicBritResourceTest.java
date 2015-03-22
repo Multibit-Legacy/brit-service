@@ -4,6 +4,8 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.yammer.dropwizard.testing.ResourceTest;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.NetworkParameters;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.junit.Test;
 import org.multibit.hd.brit.crypto.AESUtils;
@@ -15,7 +17,6 @@ import org.multibit.hd.brit.payer.PayerConfig;
 import org.multibit.hd.brit.payer.Payers;
 import org.multibit.hd.brit.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.utils.FileUtils;
 import org.multibit.hd.brit_server.testing.FixtureAsserts;
 import org.multibit.hd.brit_server.testing.FixtureUtils;
 import org.multibit.hd.brit_server.utils.StreamUtils;
@@ -24,7 +25,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Set;
@@ -34,6 +37,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class PublicBritResourceTest extends ResourceTest {
 
   private static final Logger log = LoggerFactory.getLogger(PublicBritResourceTest.class);
+
+  private static SecureRandom secureRandom = new SecureRandom();
 
   public static final String SEED_PHRASE_1 = "letter advice cage absurd amount doctor acoustic avoid letter advice cage above";
   private static final String WALLET_ID_1 = "4bbd8a749179d65a5f1b0859684f53ba5b761714";
@@ -58,8 +63,6 @@ public class PublicBritResourceTest extends ResourceTest {
   public static final char[] TEST_DATA_PASSWORD = "password".toCharArray();
 
   private PublicBritResource testObject;
-
-  private SecureRandom secureRandom;
 
   @Override
   protected void setUpResources() throws Exception {
@@ -135,7 +138,7 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(plainMatcherResponse).isNotNull();
 
     // Get the list of addresses the Payer will use
-    Set<String> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
+    Set<Address> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
     assertThat(bitcoinAddresses).isNotNull();
 
     // Get the replay date for the wallet
@@ -184,7 +187,7 @@ public class PublicBritResourceTest extends ResourceTest {
     assertThat(plainMatcherResponse).isNotNull();
 
     // Get the list of addresses the Payer will use
-    Set<String> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
+    Set<Address> bitcoinAddresses = plainMatcherResponse.getBitcoinAddresses();
     assertThat(bitcoinAddresses).isNotNull();
 
     // Get the replay date for the wallet
@@ -242,22 +245,51 @@ public class PublicBritResourceTest extends ResourceTest {
     MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, TEST_DATA_PASSWORD);
 
     // Create a random temporary directory for the Matcher store to use
-    File matcherStoreDirectory = FileUtils.makeRandomTemporaryDirectory();
+    File matcherStoreDirectory = PublicBritResourceTest.createTemporaryDirectory();
     MatcherStore matcherStore = MatcherStores.newBasicMatcherStore(matcherStoreDirectory);
 
     Matcher matcher = Matchers.newBasicMatcher(matcherConfig, matcherStore);
     assertThat(matcher).isNotNull();
 
     // Add some test data for today's bitcoin addresses
-    Set<String> bitcoinAddresses = Sets.newHashSet();
-    bitcoinAddresses.add("cat");
-    bitcoinAddresses.add("dog");
-    bitcoinAddresses.add("elephant");
-    bitcoinAddresses.add("worm");
+    Set<Address> bitcoinAddresses = Sets.newHashSet();
+    NetworkParameters mainNet = NetworkParameters.fromID(NetworkParameters.ID_MAINNET);
+    bitcoinAddresses.add(new Address(mainNet, "1MkTpZN4TpLwJjZt9zHBXREJA8avUHXB3q"));
+    bitcoinAddresses.add(new Address(mainNet, "1WGmwv86m1fFNVDRQ2YagdAFCButd36SV"));
+    bitcoinAddresses.add(new Address(mainNet, "1PP1BvDeXjUcPDiEHBPWptQBAukhAwsLFt"));
+    bitcoinAddresses.add(new Address(mainNet, "128f69V7GRqNSKwrjMkcuB6dbFKKEPtaLC"));
+
 
     matcherStore.storeBitcoinAddressesForDate(bitcoinAddresses, new Date());
 
     return matcher;
   }
 
+  /**
+    * <p>Atomically create a temporary directory that will be removed when the JVM exits</p>
+    *
+    * @return A random temporary directory
+    * @throws java.io.IOException If something goes wrong
+    */
+   public static File createTemporaryDirectory() throws IOException {
+
+     // Use JDK7 NIO Files for a more secure operation than Guava
+     File topLevelTemporaryDirectory = Files.createTempDirectory("mbhd").toFile();
+
+     topLevelTemporaryDirectory.deleteOnExit();
+
+     // Add a random number to the topLevelTemporaryDirectory
+     String temporaryDirectoryName = topLevelTemporaryDirectory.getAbsolutePath() + File.separator + secureRandom.nextInt(Integer.MAX_VALUE);
+     log.debug("Temporary directory name:\n'{}'", temporaryDirectoryName);
+     File temporaryDirectory = new File(temporaryDirectoryName);
+     temporaryDirectory.deleteOnExit();
+
+     if (temporaryDirectory.mkdir() && temporaryDirectory.exists() && temporaryDirectory.canWrite() && temporaryDirectory.canRead()) {
+       log.debug("Created temporary directory:\n'{}'", temporaryDirectory.getAbsolutePath());
+       return temporaryDirectory;
+     }
+
+     // Must have failed to be here
+     throw new IOException("Did not create '" + temporaryDirectory.getAbsolutePath() + "' with RW permissions");
+   }
 }
