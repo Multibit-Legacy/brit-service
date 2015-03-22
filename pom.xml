@@ -9,7 +9,7 @@
   <!-- Only change this on a master or release branch -->
   <version>develop-SNAPSHOT</version>
 
-  <url>http://localhost:9090</url>
+  <url>http://localhost:7070</url>
 
   <name>MultiBit BRIT Server</name>
   <description>A BRIT server using Dropwizard</description>
