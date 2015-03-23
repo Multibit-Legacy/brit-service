@@ -161,7 +161,7 @@ public class PublicBritResourceLoadTest {
   private Payer newTestPayer() throws Exception {
 
     // Load the example Matcher PGP public key
-    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc");
+    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc");
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 
     log.info("Matcher public key id = " + matcherPGPPublicKey.getKeyID());

@@ -41,21 +41,8 @@ public class PublicBritResourceTest extends ResourceTest {
   private static SecureRandom secureRandom = new SecureRandom();
 
   public static final String SEED_PHRASE_1 = "letter advice cage absurd amount doctor acoustic avoid letter advice cage above";
-  private static final String WALLET_ID_1 = "4bbd8a749179d65a5f1b0859684f53ba5b761714";
-
-  public static final String SEED_PHRASE_2 = "require want tube elegant juice cool cup noble town poem plate harsh";
-  private static final String WALLET_ID_2 = "7e5218ea0428cbd44de74567fd8af557d8715545";
-
-  private static final String SEED_PHRASE_3 = "morning truly witness grass pill typical blur then notable session exact coyote word noodle dentist hurry ability dignity";
-  private static final String WALLET_ID_3 = "b1de12bdf20f332144851da717ae32c8aebcadb7";
-
-  private static final String EXAMPLE_TEXT = "The quick brown fox jumps over the lazy dog. 01234567890. !@#$%^&*(). ,.;:[]-_=+";
-
-  public static final String TEST_MATCHER_PUBLIC_KEYRING_FILE = "/src/test/resources/matcher/gpg/pubring.gpg";
 
   public static final String TEST_MATCHER_SECRET_KEYRING_FILE = "/src/test/resources/matcher/gpg/secring.gpg";
-
-  public static final String TEST_MATCHER_PUBLIC_KEY_FILE = "/src/test/resources/matcher/export-to-payer/matcher-key.asc";
 
   /**
    * The password used in the generation of the test PGP keys
@@ -69,7 +56,7 @@ public class PublicBritResourceTest extends ResourceTest {
 
     Matcher matcher = createTestMatcher();
 
-    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc"));
+    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc"));
 
     testObject = new PublicBritResource(matcher, matcherPublicKey);
 
@@ -93,7 +80,7 @@ public class PublicBritResourceTest extends ResourceTest {
     FixtureAsserts.assertStringMatchesStringFixture(
       "Get Matcher public key",
       actualResponse,
-      "/brit/matcher-pubkey.asc"
+            "/brit/test-matcher-key.asc"
     );
 
   }
@@ -218,7 +205,7 @@ public class PublicBritResourceTest extends ResourceTest {
   private Payer newTestPayer() throws Exception {
 
     // Load the example Matcher PGP public key
-    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/matcher-pubkey.asc");
+    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc");
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 
     log.info("Matcher public key id = " + matcherPGPPublicKey.getKeyID());
