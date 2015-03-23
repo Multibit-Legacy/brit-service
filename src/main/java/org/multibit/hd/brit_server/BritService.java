@@ -105,10 +105,15 @@ public class BritService extends Service<BritConfiguration> {
     System.out.print("Matcher ");
     Matcher matcher = newMatcher(password);
     Preconditions.checkNotNull(matcher, "'matcher' must be present");
-    System.out.println("OK\nStarting server...\n");
+    System.out.println("OK\nStarting server - output will now go to 'brit-server.log' ...\n");
 
     // Load the public key
     String matcherPublicKey = Files.toString(matcherPublicKeyFile, Charsets.UTF_8);
+
+    // Redirect output to "brit-server.log"
+    PrintStream logOutput = outputFile("brit-server.log");
+    System.setOut(logOutput);
+    System.setErr(logOutput);
 
     // Must be OK to be here
     new BritService(matcher, matcherPublicKey).run(args);
@@ -261,7 +266,9 @@ public class BritService extends Service<BritConfiguration> {
 
     // Session handler
     environment.setSessionHandler(new SessionHandler());
-
   }
 
+   private static PrintStream outputFile(String name) throws FileNotFoundException  {
+       return new PrintStream(new BufferedOutputStream(new FileOutputStream(name)));
+   }
 }
