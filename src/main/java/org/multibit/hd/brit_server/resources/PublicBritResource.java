@@ -94,8 +94,10 @@ public class PublicBritResource extends BaseResource {
     Preconditions.checkNotNull(payload, "'payload' must be present");
     Preconditions.checkState(payload.length() < MAX_PAYLOAD_LENGTH, "'payload' is too long");
 
-    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload.getBytes(Charsets.UTF_8));
-
+    byte[] payloadAsBytes = payload.getBytes(Charsets.UTF_8);
+    log.debug("Processing payer request payload of length {} bytes", payloadAsBytes.length);
+    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payloadAsBytes);
+    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload());
     return Response
       .created(UriBuilder.fromPath("/brit").build())
       .entity(encryptedMatcherResponse.getPayload())
@@ -120,7 +122,9 @@ public class PublicBritResource extends BaseResource {
     Preconditions.checkNotNull(payload, "'payload' must be present");
     Preconditions.checkState(payload.length < MAX_PAYLOAD_LENGTH, "'payload' is too long");
 
+    log.debug("Processing payer request payload of length {} bytes", payload.length);
     EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
+    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload());
 
     return Response
       .created(UriBuilder.fromPath("/brit").build())
@@ -150,14 +154,18 @@ public class PublicBritResource extends BaseResource {
     try {
       // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
       final PayerRequest matcherPayerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
+      log.debug("Decrypted payer request BRIT walletId: {}", matcherPayerRequest.getBritWalletId());
 
       // Get the Matcher to process the EncryptedPayerRequest
       final MatcherResponse matcherResponse = matcher.process(matcherPayerRequest);
       Preconditions.checkNotNull(matcherResponse, "'matcherResponse' must be present");
 
+      log.debug("Decrypted matcher response, number of addresses: {}", matcherResponse.getBitcoinAddresses().size());
+
       // Encrypt the Matcher response with the AES session key
       encryptedMatcherResponse = matcher.encryptMatcherResponse(matcherResponse);
       Preconditions.checkNotNull(encryptedMatcherResponse, "'encryptedMatcherResponse' must be present");
+      log.debug("Encrypted matcher response, size: {} bytes", encryptedMatcherResponse.getPayload().length);
 
       // Put it in the cache for later
       MatcherResponseCache.INSTANCE.put(sha1, encryptedMatcherResponse);
