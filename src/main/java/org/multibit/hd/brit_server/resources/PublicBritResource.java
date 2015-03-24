@@ -124,7 +124,7 @@ public class PublicBritResource extends BaseResource {
 
     log.debug("Processing payer request payload of length {} bytes", payload.length);
     EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
-    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload());
+    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload().length);
 
     return Response
       .created(UriBuilder.fromPath("/brit").build())
@@ -178,8 +178,5 @@ public class PublicBritResource extends BaseResource {
     Preconditions.checkState(encryptedMatcherResponse.getPayload().length > 0, "'payload' must be present");
 
     return encryptedMatcherResponse;
-
-
   }
-
 }
