@@ -16,7 +16,6 @@ import org.multibit.hd.brit.matcher.*;
 import org.multibit.hd.brit_server.health.SiteHealthCheck;
 import org.multibit.hd.brit_server.resources.PublicBritResource;
 import org.multibit.hd.brit_server.resources.RuntimeExceptionMapper;
-import org.multibit.hd.brit_server.servlets.AddressThrottlingFilter;
 import org.multibit.hd.brit_server.servlets.SafeLocaleFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -256,13 +255,6 @@ public class BritService extends Service<BritConfiguration> {
 
     // Filters
     environment.addFilter(new SafeLocaleFilter(), "/*");
-    if (britConfiguration.isProduction()) {
-      environment.addFilter(new AddressThrottlingFilter(), "/*");
-    } else {
-      log.warn("******************************************************************************");
-      log.warn("* Address throttling is not active. Use 'production: true' on a live server. *");
-      log.warn("******************************************************************************");
-    }
 
     // Session handler
     environment.setSessionHandler(new SessionHandler());
