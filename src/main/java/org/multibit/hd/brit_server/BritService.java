@@ -105,13 +105,13 @@ public class BritService extends Service<BritConfiguration> {
     System.out.print("Matcher ");
     Matcher matcher = newMatcher(password);
     Preconditions.checkNotNull(matcher, "'matcher' must be present");
-    System.out.println("OK\nStarting server - output will now go to 'brit-server.log' ...\n");
+    System.out.println("OK\nStarting server - output will now go to 'brit-service.log' ...\n");
 
     // Load the public key
     String matcherPublicKey = Files.toString(matcherPublicKeyFile, Charsets.UTF_8);
 
-    // Redirect output to "brit-server.log"
-    PrintStream logOutput = outputFile("brit-server.log");
+    // Redirect output to "brit-service.log"
+    PrintStream logOutput = outputFile("brit-service.log");
     System.setOut(logOutput);
     System.setErr(logOutput);
 

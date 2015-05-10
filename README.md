@@ -1,6 +1,6 @@
 ## MultiBit BRIT Service
 
-Build status: [![Build Status](https://travis-ci.org/bitcoin-solutions/brit-server.png?branch=develop)](https://travis-ci.org/bitcoin-solutions/brit-server)
+Build status: [![Build Status](https://travis-ci.org/bitcoin-solutions/brit-service.png?branch=develop)](https://travis-ci.org/bitcoin-solutions/brit-service)
 
 This repo contains the source for the MultiBit BRIT service.
 
@@ -87,7 +87,7 @@ This changes the  launch command line from a standard Dropwizard as follows:
 
     cd <project root>
     mvn clean install
-    java -cp "bcprov-jdk16-1.46.jar:target/brit-server-<version>.jar" org.multibit.hd.brit_server.BritService server brit-config.yml
+    java -cp "bcprov-jdk16-1.46.jar:target/brit-service-<version>.jar" org.multibit.hd.brit_server.BritService server brit-config.yml
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
 as found in `pom.xml` (e.g. "develop-SNAPSHOT" or "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.

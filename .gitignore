@@ -36,4 +36,4 @@ target/
 hs_err_pid*
 
 # BRIT server log
-brit-server.log
+brit-service.log

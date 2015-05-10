@@ -175,7 +175,7 @@ Start the Matcher daemon which:
 * loads all the Redeemer Bitcoin addresses
 * processes incoming Payer requests
 
-See the brit-server readme.md for full instructions on setting up the brit-server on linux
+See the brit-service readme.md for full instructions on setting up the brit-service on linux
 
 # Summary
 
