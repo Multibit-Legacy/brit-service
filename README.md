@@ -68,7 +68,7 @@ external location.
 Import the project as a Maven project in the usual manner.
 
 To start the project you just need to execute `BritService.main()` as a Java application. You'll need a runtime configuration
-that passes in `server brit-config.yml` as the Program Arguments.
+that passes in `server config.yml` as the Program Arguments.
 
 Open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
 public key.
@@ -87,7 +87,7 @@ This changes the  launch command line from a standard Dropwizard as follows:
 
     cd <project root>
     mvn clean install
-    java -cp "bcprov-jdk16-1.46.jar:target/brit-service-<version>.jar" org.multibit.hd.brit_server.BritService server brit-config.yml
+    java -cp "bcprov-jdk16-1.46.jar:target/brit-service-<version>.jar" org.multibit.hd.brit_server.BritService server config.yml
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
 as found in `pom.xml` (e.g. "develop-SNAPSHOT" or "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.
