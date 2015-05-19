@@ -132,4 +132,4 @@ A `400_BAD_REQUEST` indicates that the BRIT server is not able to decrypt the Pa
 ### Where does the ASCII art come from?
 
 The ASCII art for the startup banner was created using the online tool available at
-[TAAG](http://patorjk.com/software/taag/#p=display&f=Slant&t=BRIT%20Server)
+[TAAG](http://patorjk.com/software/taag/#p=display&f=Slant&t=BRIT)
