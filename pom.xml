@@ -139,10 +139,10 @@
       <artifactId>dropwizard-core</artifactId>
       <version>${dropwizard.version}</version>
     </dependency>
-    <!-- HTML Freemarker views support -->
+    <!-- Jersey client support -->
     <dependency>
       <groupId>com.yammer.dropwizard</groupId>
-      <artifactId>dropwizard-views</artifactId>
+      <artifactId>dropwizard-client</artifactId>
       <version>${dropwizard.version}</version>
     </dependency>
 
