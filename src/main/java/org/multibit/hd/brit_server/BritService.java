@@ -7,21 +7,35 @@ import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.config.LoggingFactory;
-import com.yammer.dropwizard.views.ViewMessageBodyWriter;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.multibit.hd.brit.crypto.PGPUtils;
-import org.multibit.hd.brit.matcher.*;
-import org.multibit.hd.brit_server.health.SiteHealthCheck;
+import org.multibit.hd.brit.matcher.Matcher;
+import org.multibit.hd.brit.matcher.MatcherConfig;
+import org.multibit.hd.brit.matcher.MatcherStore;
+import org.multibit.hd.brit.matcher.MatcherStores;
+import org.multibit.hd.brit.matcher.Matchers;
+import org.multibit.hd.brit_server.health.BritMatcherHealthCheck;
+import org.multibit.hd.brit_server.health.BritPublicKeyHealthCheck;
 import org.multibit.hd.brit_server.resources.PublicBritResource;
 import org.multibit.hd.brit_server.resources.RuntimeExceptionMapper;
-import org.multibit.hd.brit_server.servlets.AddressThrottlingFilter;
 import org.multibit.hd.brit_server.servlets.SafeLocaleFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Writer;
 
 /**
  * <p>Service to provide the following to application:</p>
@@ -105,15 +119,10 @@ public class BritService extends Service<BritConfiguration> {
     System.out.print("Matcher ");
     Matcher matcher = newMatcher(password);
     Preconditions.checkNotNull(matcher, "'matcher' must be present");
-    System.out.println("OK\nStarting server - output will now go to 'brit-server.log' ...\n");
+    System.out.println("OK\nStarting server - refer to /var/log/brit for details\n");
 
     // Load the public key
     String matcherPublicKey = Files.toString(matcherPublicKeyFile, Charsets.UTF_8);
-
-    // Redirect output to "brit-server.log"
-    PrintStream logOutput = outputFile("brit-server.log");
-    System.setOut(logOutput);
-    System.setErr(logOutput);
 
     // Must be OK to be here
     new BritService(matcher, matcherPublicKey).run(args);
@@ -248,21 +257,14 @@ public class BritService extends Service<BritConfiguration> {
     environment.addResource(new PublicBritResource(matcher, matcherPublicKey));
 
     // Health checks
-    environment.addHealthCheck(new SiteHealthCheck());
+    environment.addHealthCheck(new BritMatcherHealthCheck());
+    environment.addHealthCheck(new BritPublicKeyHealthCheck());
 
     // Providers
-    environment.addProvider(new ViewMessageBodyWriter());
     environment.addProvider(new RuntimeExceptionMapper());
 
     // Filters
     environment.addFilter(new SafeLocaleFilter(), "/*");
-    if (britConfiguration.isProduction()) {
-      environment.addFilter(new AddressThrottlingFilter(), "/*");
-    } else {
-      log.warn("******************************************************************************");
-      log.warn("* Address throttling is not active. Use 'production: true' on a live server. *");
-      log.warn("******************************************************************************");
-    }
 
     // Session handler
     environment.setSessionHandler(new SessionHandler());

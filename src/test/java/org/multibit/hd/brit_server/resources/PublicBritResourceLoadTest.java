@@ -1,12 +1,21 @@
 package org.multibit.hd.brit_server.resources;
 
 import com.google.common.base.Optional;
-import com.google.common.util.concurrent.*;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.sun.jersey.api.client.Client;
 import org.bouncycastle.openpgp.PGPPublicKey;
+import org.junit.Ignore;
 import org.multibit.hd.brit.crypto.AESUtils;
 import org.multibit.hd.brit.crypto.PGPUtils;
-import org.multibit.hd.brit.dto.*;
+import org.multibit.hd.brit.dto.BRITWalletId;
+import org.multibit.hd.brit.dto.EncryptedMatcherResponse;
+import org.multibit.hd.brit.dto.EncryptedPayerRequest;
+import org.multibit.hd.brit.dto.MatcherResponse;
+import org.multibit.hd.brit.dto.PayerRequest;
 import org.multibit.hd.brit.payer.Payer;
 import org.multibit.hd.brit.payer.PayerConfig;
 import org.multibit.hd.brit.payer.Payers;
@@ -25,6 +34,7 @@ import java.util.concurrent.Executors;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+@Ignore
 public class PublicBritResourceLoadTest {
 
   private static final Logger log = LoggerFactory.getLogger(PublicBritResourceLoadTest.class);
@@ -161,7 +171,7 @@ public class PublicBritResourceLoadTest {
   private Payer newTestPayer() throws Exception {
 
     // Load the example Matcher PGP public key
-    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc");
+    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/matcher/gpg/matcher-key.asc");
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 
     log.info("Matcher public key id = " + matcherPGPPublicKey.getKeyID());

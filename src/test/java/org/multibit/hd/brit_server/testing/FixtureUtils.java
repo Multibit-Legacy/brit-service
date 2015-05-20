@@ -18,7 +18,7 @@ public class FixtureUtils {
 
   /**
    * Make a file reference - a file can be referenced as, say,
-   * brit-server/src/test/resources/matcher/gpg/pubring.gpg
+   * brit-service/src/test/resources/matcher/gpg/pubring.gpg
    * or
    * ./src/test/resources/matcher/gpg/pubring.gpg
    * depending on whether you are running via an IDE or in Maven

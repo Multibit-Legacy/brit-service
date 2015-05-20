@@ -4,15 +4,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.multibit.hd</groupId>
-  <artifactId>brit-server</artifactId>
+  <artifactId>brit-service</artifactId>
 
   <!-- Only change this on a master or release branch -->
   <version>develop-SNAPSHOT</version>
 
   <url>http://localhost:7070</url>
 
-  <name>MultiBit BRIT Server</name>
-  <description>A BRIT server using Dropwizard</description>
+  <name>BRIT Service</name>
+  <description>Dropwizard service implementing a BRIT server</description>
   <inceptionYear>2014</inceptionYear>
 
   <!-- Developer list -->
@@ -36,16 +36,16 @@
 
   <!-- GitHub for source code management -->
   <scm>
-    <connection>scm:git:git://github.com/bitcoin-solutions/brit-server.git</connection>
-    <developerConnection>scm:git:git@github.com:bitcoin-solutions/brit-server.git</developerConnection>
-    <url>http://github.com/bitcoin-solutions/brit-server/</url>
+    <connection>scm:git:git://github.com/bitcoin-solutions/brit-service.git</connection>
+    <developerConnection>scm:git:git@github.com:bitcoin-solutions/brit-service.git</developerConnection>
+    <url>http://github.com/bitcoin-solutions/brit-service/</url>
     <tag>develop-SNAPSHOT</tag>
   </scm>
 
   <!-- GitHub for issue management -->
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/bitcoin-solutions/brit-server/issues#issue/</url>
+    <url>http://github.com/bitcoin-solutions/brit-service/issues#issue/</url>
   </issueManagement>
 
   <repositories>
@@ -139,10 +139,10 @@
       <artifactId>dropwizard-core</artifactId>
       <version>${dropwizard.version}</version>
     </dependency>
-    <!-- HTML Freemarker views support -->
+    <!-- Jersey client support -->
     <dependency>
       <groupId>com.yammer.dropwizard</groupId>
-      <artifactId>dropwizard-views</artifactId>
+      <artifactId>dropwizard-client</artifactId>
       <version>${dropwizard.version}</version>
     </dependency>
 

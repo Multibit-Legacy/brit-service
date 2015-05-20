@@ -70,6 +70,11 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
         .status(Response.Status.NOT_FOUND)
         .build();
     }
+    if (webAppException.getResponse().getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+      return Response
+        .status(Response.Status.BAD_REQUEST)
+        .build();
+    }
 
     // Debug logging
 

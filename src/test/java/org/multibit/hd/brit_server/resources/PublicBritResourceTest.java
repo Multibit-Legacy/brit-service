@@ -56,7 +56,7 @@ public class PublicBritResourceTest extends ResourceTest {
 
     Matcher matcher = createTestMatcher();
 
-    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc"));
+    String matcherPublicKey = StreamUtils.toString(PublicBritResource.class.getResourceAsStream("/matcher/gpg/matcher-key.asc"));
 
     testObject = new PublicBritResource(matcher, matcherPublicKey);
 
@@ -80,7 +80,7 @@ public class PublicBritResourceTest extends ResourceTest {
     FixtureAsserts.assertStringMatchesStringFixture(
       "Get Matcher public key",
       actualResponse,
-            "/brit/test-matcher-key.asc"
+      "/matcher/gpg/matcher-key.asc"
     );
 
   }
@@ -205,7 +205,7 @@ public class PublicBritResourceTest extends ResourceTest {
   private Payer newTestPayer() throws Exception {
 
     // Load the example Matcher PGP public key
-    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/brit/test-matcher-key.asc");
+    InputStream matcherPublicKeyInputStream = PublicBritResource.class.getResourceAsStream("/matcher/gpg/matcher-key.asc");
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 
     log.info("Matcher public key id = " + matcherPGPPublicKey.getKeyID());

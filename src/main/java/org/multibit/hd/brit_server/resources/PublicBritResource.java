@@ -3,6 +3,7 @@ package org.multibit.hd.brit_server.resources;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.yammer.dropwizard.jersey.caching.CacheControl;
 import com.yammer.metrics.annotation.Timed;
 import org.multibit.hd.brit.dto.EncryptedMatcherResponse;
@@ -91,17 +92,11 @@ public class PublicBritResource extends BaseResource {
   @CacheControl(noCache = true)
   public Response submitEncryptedPayerRequest(String payload) throws Exception {
 
-    Preconditions.checkNotNull(payload, "'payload' must be present");
-    Preconditions.checkState(payload.length() < MAX_PAYLOAD_LENGTH, "'payload' is too long");
+    if (Strings.isNullOrEmpty(payload)) {
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
 
-    byte[] payloadAsBytes = payload.getBytes(Charsets.UTF_8);
-    log.debug("Processing payer request payload of length {} bytes", payloadAsBytes.length);
-    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payloadAsBytes);
-    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload());
-    return Response
-      .created(UriBuilder.fromPath("/brit").build())
-      .entity(encryptedMatcherResponse.getPayload())
-      .build();
+    return submitEncryptedPayerRequest(payload.getBytes(Charsets.UTF_8));
 
   }
 
@@ -119,12 +114,11 @@ public class PublicBritResource extends BaseResource {
   @CacheControl(noCache = true)
   public Response submitEncryptedPayerRequest(byte[] payload) {
 
-    Preconditions.checkNotNull(payload, "'payload' must be present");
-    Preconditions.checkState(payload.length < MAX_PAYLOAD_LENGTH, "'payload' is too long");
+    if (payload==null || payload.length == 0 || payload.length > MAX_PAYLOAD_LENGTH) {
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
 
-    log.debug("Processing payer request payload of length {} bytes", payload.length);
     EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
-    log.debug("Matcher response produced of length {} bytes", encryptedMatcherResponse.getPayload().length);
 
     return Response
       .created(UriBuilder.fromPath("/brit").build())
