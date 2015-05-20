@@ -9,6 +9,6 @@ echo 5. Verify BRIT server is still running by checking
 echo ..   TEST: http://localhost:7070/brit/public-key   or 
 echo ..   LIVE: http://multibit.org/brit/public-key
 echo ..
-echo TIP: You can find this process again by typing 'ps -A | grep brit'
+echo TIP: You can find this process again by typing 'ps -AF | grep brit'
 java -cp "bcprov-jdk16-1.46.jar:target/brit-server-develop-SNAPSHOT.jar" org.multibit.hd.brit_server.BritService server brit-config.yml
 
