@@ -49,12 +49,22 @@
   </issueManagement>
 
   <repositories>
-    <!-- Define the MultiBit staging repository for snapshots -->
+    <!-- Define the MultiBit staging repository for releases and snapshots -->
+    <!-- Use https://rawgithub.com to provide a consistent result -->
     <repository>
-      <id>mbhd-maven</id>
-      <url>https://raw.githubusercontent.com/bitcoin-solutions/mbhd-maven/master/snapshots</url>
-      <snapshots/>
+      <id>mbhd-maven-release</id>
+      <url>https://rawgithub.com/bitcoin-solutions/mbhd-maven/master/releases</url>
+      <releases/>
     </repository>
+    <repository>
+      <id>mbhd-maven-snapshot</id>
+      <url>https://rawgithub.com/bitcoin-solutions/mbhd-maven/master/snapshots</url>
+      <!-- These artifacts change frequently during development iterations -->
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+
   </repositories>
 
   <!-- Set the version levels for linked dependencies -->
