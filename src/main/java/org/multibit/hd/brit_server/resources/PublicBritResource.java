@@ -43,8 +43,6 @@ public class PublicBritResource extends BaseResource {
 
   private final Matcher matcher;
 
-  private final MessageDigest sha1Digest;
-
   private final String matcherPublicKey;
 
   /**
@@ -54,8 +52,6 @@ public class PublicBritResource extends BaseResource {
 
     this.matcher = matcher;
     this.matcherPublicKey = matcherPublicKey;
-
-    this.sha1Digest = MessageDigest.getInstance("SHA1");
 
   }
 
@@ -118,7 +114,13 @@ public class PublicBritResource extends BaseResource {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
-    EncryptedMatcherResponse encryptedMatcherResponse = newMatcherResponse(payload);
+    EncryptedMatcherResponse encryptedMatcherResponse;
+    try {
+      encryptedMatcherResponse = newMatcherResponse(payload);
+    } catch (NoSuchAlgorithmException e) {
+      // This should never happen in a correctly configured service
+      throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+    }
 
     return Response
       .created(UriBuilder.fromPath("/brit").build())
@@ -127,10 +129,10 @@ public class PublicBritResource extends BaseResource {
 
   }
 
-  private EncryptedMatcherResponse newMatcherResponse(byte[] payload) {
+  private EncryptedMatcherResponse newMatcherResponse(byte[] payload) throws NoSuchAlgorithmException {
 
     // Check the cache
-    byte[] sha1 = sha1Digest.digest(payload);
+    byte[] sha1 = MessageDigest.getInstance("SHA1").digest(payload);
 
     Optional<EncryptedMatcherResponse> cachedResponse = MatcherResponseCache.INSTANCE.getByPayerRequestDigest(sha1);
 
