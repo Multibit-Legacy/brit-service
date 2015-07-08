@@ -7,6 +7,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import org.multibit.hd.brit.core.exceptions.MatcherResponseException;
+import org.multibit.hd.brit.core.exceptions.PayerRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.Strings;
@@ -28,21 +29,26 @@ public class MatcherResponse {
 
   public static final String OPTIONAL_NOT_PRESENT_TEXT = "not-present";
 
+  private final int version;
   private final Optional<Date> replayDateOptional;
-
   private final Set<Address> bitcoinAddresses;
 
   /**
+   * @param version            The BRIT version
    * @param replayDateOptional The replay date
    * @param bitcoinAddresses   The Bitcoin addresses to use
    */
-  public MatcherResponse(Optional<Date> replayDateOptional, Set<Address> bitcoinAddresses) {
+  public MatcherResponse(int version, Optional<Date> replayDateOptional, Set<Address> bitcoinAddresses) {
+    this.version = version;
     this.replayDateOptional = replayDateOptional;
     this.bitcoinAddresses = bitcoinAddresses;
   }
 
+  /**
+   * @return The BRIT protocol version
+   */
   public int getVersion() {
-    return 1;
+    return version;
   }
 
   public Set<Address> getBitcoinAddresses() {
@@ -96,8 +102,16 @@ public class MatcherResponse {
     String[] rows = Strings.split(serialisedMatcherResponseAsString, '\n');
 
     if (rows.length > 0) {
-      if (Long.parseLong(rows[0]) != 1) {
-        throw new MatcherResponseException("The serialisedMatcherResponse had a version of '" + rows[0] + "'. This code only understands a version of '1'");
+      // Extract version
+      final int version;
+      try {
+        version = Integer.parseInt(rows[0]);
+      } catch (IllegalArgumentException e) {
+        throw new PayerRequestException("The serialisedPayerRequest had a malformed version entry");
+      }
+      // Version check
+      if (version < 1 || version > 2) {
+        throw new MatcherResponseException("The serialisedPayerRequest had a version of '" + rows[0] + "'. This code only understands the range [1,2]");
       }
 
       Optional<Date> replayDateOptional;
@@ -120,7 +134,7 @@ public class MatcherResponse {
         }
       }
 
-      return new MatcherResponse(replayDateOptional, bitcoinAddresses);
+      return new MatcherResponse(version, replayDateOptional, bitcoinAddresses);
 
     } else {
       throw new MatcherResponseException("Cannot parse the response. Require 2 or more rows.");

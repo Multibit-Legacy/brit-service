@@ -148,6 +148,7 @@ public class BasicMatcherTest {
 
     // The original matcher response should be the same as the decrypted version
     assertThat(matcherResponse).isEqualTo(payersMatcherResponse);
+    assertThat(matcherResponse.getVersion()).isEqualTo(payerRequest.getVersion());
 
     // The Payer's Matcher response contains the list of addresses the Payer will use
     Set<Address> addressList = payersMatcherResponse.getBitcoinAddresses();
@@ -224,6 +225,7 @@ public class BasicMatcherTest {
 
     // The original matcher response should be the same as the decrypted version
     assertThat(matcherResponse).isEqualTo(payersMatcherResponse);
+    assertThat(matcherResponse.getVersion()).isEqualTo(payerRequest.getVersion());
 
     // The Payer's Matcher response contains the list of addresses the Payer will use
     Set<Address> addressList = payersMatcherResponse.getBitcoinAddresses();
@@ -289,6 +291,7 @@ public class BasicMatcherTest {
 
     // Introduce a mangled MatcherResponse (simulates a hardware fault on the server)
     MatcherResponse mangledMatcherResponse = new MatcherResponse(
+      matcherPayerRequest.getVersion(),
       matcherResponse.getReplayDate(),
       matcherResponse.getBitcoinAddresses()
     ) {

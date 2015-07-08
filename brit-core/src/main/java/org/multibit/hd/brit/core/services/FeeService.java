@@ -160,7 +160,7 @@ public class FeeService {
 
       // Fall back to the list of hardwired addresses
       log.warn("Using hardwired addresses");
-      matcherResponse = new MatcherResponse(Optional.<Date>absent(), getHardwiredFeeAddresses());
+      matcherResponse = new MatcherResponse(payerRequest.getVersion(), Optional.<Date>absent(), getHardwiredFeeAddresses());
     }
 
     // Add the MatcherResponse as a wallet extension so that on the next wallet write it will be persisted

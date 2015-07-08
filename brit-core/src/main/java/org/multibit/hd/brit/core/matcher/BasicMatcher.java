@@ -155,7 +155,9 @@ public class BasicMatcher implements Matcher {
       Preconditions.checkState(!currentBitcoinAddressList.isEmpty(), "'currentBitcoinAddressList' must not be empty after storage.");
 
     }
-    return new MatcherResponse(Optional.of(replayDate), currentBitcoinAddressList);
+
+    // Respond to the Payer with the same version as they offered
+    return new MatcherResponse(payerRequest.getVersion(), Optional.of(replayDate), currentBitcoinAddressList);
   }
 
   @Override
