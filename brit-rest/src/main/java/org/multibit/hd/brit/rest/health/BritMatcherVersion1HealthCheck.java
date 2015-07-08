@@ -17,6 +17,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.multibit.hd.brit.core.crypto.AESUtils;
 import org.multibit.hd.brit.core.crypto.PGPUtils;
 import org.multibit.hd.brit.core.dto.*;
+import org.multibit.hd.brit.core.payer.BasicPayer;
 import org.multibit.hd.brit.core.payer.Payer;
 import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
@@ -31,12 +32,12 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
 
-public class BritMatcherHealthCheck extends HealthCheck {
+public class BritMatcherVersion1HealthCheck extends HealthCheck {
 
   private SecureRandom secureRandom = new SecureRandom();
 
-  public BritMatcherHealthCheck() {
-    super("BRIT matcher health check");
+  public BritMatcherVersion1HealthCheck() {
+    super("BRIT V1 matcher health check");
   }
 
   @Override
@@ -63,7 +64,7 @@ public class BritMatcherHealthCheck extends HealthCheck {
   private MatcherResponse createAndRegisterWalletId() throws Exception {
 
     // Create a payer and a wallet Id
-    Payer payer = newTestPayer();
+    BasicPayer payer = (BasicPayer) newTestPayer();
     BRITWalletId britWalletId = newBritWalletId();
 
     // Create a random session Id
@@ -73,7 +74,8 @@ public class BritMatcherHealthCheck extends HealthCheck {
     Optional<Date> firstTransactionDateOptional = Optional.of(new Date());
 
     // Ask the payer to create an EncryptedPayerRequest containing a BRITWalletId, a session id and a firstTransactionDate
-    PayerRequest payerRequest = payer.newPayerRequest(
+    PayerRequest payerRequest = payer.newLegacyPayerRequest(
+      1, // Force a Version 1 request
       britWalletId,
       sessionId,
       firstTransactionDateOptional
