@@ -11,7 +11,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.multibit.hd.brit.core.crypto.PGPUtils;
 import org.multibit.hd.brit.core.matcher.*;
-import org.multibit.hd.brit.rest.health.BritMatcherHealthCheck;
+import org.multibit.hd.brit.rest.health.BritMatcherVersion1HealthCheck;
+import org.multibit.hd.brit.rest.health.BritMatcherVersion2HealthCheck;
 import org.multibit.hd.brit.rest.health.BritPublicKeyHealthCheck;
 import org.multibit.hd.brit.rest.resources.PublicBritResource;
 import org.multibit.hd.brit.rest.resources.RuntimeExceptionMapper;
@@ -22,7 +23,6 @@ import org.spongycastle.openpgp.PGPException;
 import org.spongycastle.openpgp.PGPPublicKey;
 
 import java.io.*;
-import java.nio.charset.Charset;
 
 /**
  * <p>Service to provide the following to application:</p>
@@ -206,6 +206,7 @@ public class BritService extends Service<BritConfiguration> {
     return matcherPublicKeyFile;
   }
 
+  @SuppressFBWarnings({"DM_DEFAULT_ENCODING"})
   private static File getTestCryptoFile(File britMatcherDirectory) throws IOException {
 
     File testCryptoFile = new File(britMatcherDirectory, "gpg/test.txt");
@@ -214,11 +215,8 @@ public class BritService extends Service<BritConfiguration> {
         System.err.printf("Could not create crypto test file: '%s'.%n", testCryptoFile.getAbsolutePath());
         System.exit(-1);
       }
-      // Populate it with a simple test
-      try (OutputStreamWriter writer = new OutputStreamWriter(
-        new FileOutputStream("some_output.utf8"),
-        Charset.forName("UTF-8").newEncoder())
-      ) {
+      try (Writer writer = new FileWriter(testCryptoFile)) {
+        // Populate it with a simple test
         writer.write("OK");
         writer.flush();
       }
@@ -249,7 +247,8 @@ public class BritService extends Service<BritConfiguration> {
     environment.addResource(new PublicBritResource(matcher, matcherPublicKey));
 
     // Health checks
-    environment.addHealthCheck(new BritMatcherHealthCheck());
+    environment.addHealthCheck(new BritMatcherVersion1HealthCheck());
+    environment.addHealthCheck(new BritMatcherVersion2HealthCheck());
     environment.addHealthCheck(new BritPublicKeyHealthCheck());
 
     // Providers
