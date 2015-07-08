@@ -58,7 +58,7 @@ This is in a PGP secret keyring stored exactly here: `/var/brit/matcher/gpg/secr
 
 You will need to open up the permissions on the folders in `/var/brit` and its subdirectories using:
 
-    sudo chmod a+wx -R /var/brit
+    sudo chmod -R a+wx /var/brit
 
 To get a developer environment up and running just copy these values from `src/test/resources/matcher` into the
 external location.
