@@ -70,7 +70,7 @@ Import the project as a Maven project in the usual manner.
 To start the project you just need to execute `BritService.main()` as a Java application. You'll need a runtime configuration
 that passes in `server config.yml` as the Program Arguments.
 
-Open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
+Open a browser to [http://localhost:7070/brit/public-key](http://localhost:7070/brit/public-key) and you should see the BRIT server
 public key.
 
 At this stage you can perform most development tasks and you won't be prompted for a password.
@@ -98,15 +98,20 @@ On startup you will need to provide the passphrase for the Matcher key store. It
 
 All commands will work on *nix without modification, use \ instead of / for Windows.
 
+## Test the BRIT server using health checks
+
+Open a browser to [http://localhost:7071/healthcheck](http://localhost:7070/healthcheck) and you should see the BRIT server
+perform a self-test. Note the admin port is 7071 and is not generally exposed to the outside world.
+
 ## Test the BRIT server using a browser REST plugin
 
-First open a browser to [http://localhost:9090/brit/public-key](http://localhost:9090/brit/public-key) and you should see the BRIT server
-public key. Note it is port 9090 not the usual 8080.
+First open a browser to [http://localhost:7070/brit/public-key](http://localhost:7070/brit/public-key) and you should see the BRIT server
+public key. Note it is port 7070 not the usual 8080.
 
 If you are running Chrome and have the excellent Advanced REST Client extension installed then you can build a POST request for the
 development environment as follows:
 
-    Host: http://localhost:9090/brit
+    Host: http://localhost:7070/brit
     Content-Type: text/plain
     Accept: application/octet-stream
 
