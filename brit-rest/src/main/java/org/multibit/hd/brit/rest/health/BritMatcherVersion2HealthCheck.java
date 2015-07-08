@@ -115,6 +115,9 @@ public class BritMatcherVersion2HealthCheck extends HealthCheck {
     if (plainMatcherResponse.getBitcoinAddresses().isEmpty()) {
       throw new Exception("Matcher response does not contain Bitcoin addresses (empty)");
     }
+    if (plainMatcherResponse.getVersion() != 2) {
+      throw new Exception("Matcher response contained version: " + plainMatcherResponse.getVersion() + ". Expected 2.");
+    }
 
     return plainMatcherResponse;
 
