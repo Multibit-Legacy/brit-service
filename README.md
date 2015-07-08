@@ -87,7 +87,7 @@ This changes the  launch command line from a standard Dropwizard as follows:
 
     cd <project root>
     mvn clean install
-    java -cp "bcprov-jdk16-1.46.jar:target/brit-service-<version>.jar" org.multibit.hd.brit_server.BritService server config.yml
+    java -cp "bcprov-jdk16-1.46.jar:target/brit-service-<version>.jar" org.multibit.hd.brit.rest.BritService server config.yml
 
 where `<project root>` is the root directory of the project as checked out through git and `<version>` is the version
 as found in `pom.xml` (e.g. "develop-SNAPSHOT" or "1.0.0") but you'll see a `.jar` in the `target` directory so it'll be obvious.

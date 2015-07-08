@@ -1,6 +1,7 @@
 # ###################################### BRIT Server settings ######################################
 
 production: true
+matcherStorePath: /var/brit/matcher
 
 # ################################## Dropwizard specific settings ##################################
 
