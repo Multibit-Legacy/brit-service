@@ -26,8 +26,8 @@ import org.bitcoinj.params.MainNetParams;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.multibit.hd.brit.core.crypto.AESUtils;
-import org.multibit.hd.brit.core.crypto.PGPUtils;
+import org.multibit.commons.crypto.AESUtils;
+import org.multibit.commons.crypto.PGPUtils;
 import org.multibit.hd.brit.core.dto.*;
 import org.multibit.hd.brit.core.exceptions.MatcherResponseException;
 import org.multibit.hd.brit.core.matcher.*;
@@ -37,7 +37,7 @@ import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.crypto.PGPUtilsTest;
+import org.multibit.hd.brit.BritTestUtils;
 import org.multibit.hd.brit.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -337,8 +337,8 @@ public class BasicMatcherTest {
   private Matcher createTestMatcher_All_Good() throws Exception {
 
     // Find the example Matcher PGP secret key ring file
-    File matcherSecretKeyFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_SECRET_KEYRING_FILE);
-    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, PGPUtilsTest.TEST_DATA_PASSWORD);
+    File matcherSecretKeyFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_SECRET_KEYRING_FILE);
+    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, BritTestUtils.TEST_DATA_PASSWORD);
 
     // Create a random temporary directory for the Matcher store to use
     File matcherStoreDirectory = Files.createTempDir();
@@ -365,8 +365,8 @@ public class BasicMatcherTest {
   private Matcher createTestMatcher_One_Bad() throws Exception {
 
     // Find the example Matcher PGP secret key ring file
-    File matcherSecretKeyFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_SECRET_KEYRING_FILE);
-    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, PGPUtilsTest.TEST_DATA_PASSWORD);
+    File matcherSecretKeyFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_SECRET_KEYRING_FILE);
+    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, BritTestUtils.TEST_DATA_PASSWORD);
 
     // Create a random temporary directory for the Matcher store to use
     File matcherStoreDirectory = Files.createTempDir();
@@ -392,7 +392,7 @@ public class BasicMatcherTest {
   private Payer createTestPayer() throws Exception {
 
     // Load the example Matcher PGP public key
-    File matcherPublicKeyFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_PUBLIC_KEY_FILE);
+    File matcherPublicKeyFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_PUBLIC_KEY_FILE);
     FileInputStream matcherPublicKeyInputStream = new FileInputStream(matcherPublicKeyFile);
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 

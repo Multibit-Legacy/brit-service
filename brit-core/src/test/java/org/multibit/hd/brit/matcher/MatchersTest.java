@@ -20,7 +20,7 @@ import com.google.common.io.Files;
 import org.junit.Before;
 import org.junit.Test;
 import org.multibit.hd.brit.core.matcher.*;
-import org.multibit.hd.brit.crypto.PGPUtilsTest;
+import org.multibit.hd.brit.BritTestUtils;
 
 import java.io.File;
 
@@ -36,8 +36,8 @@ public class MatchersTest {
   public void testCreateMatcher() throws Exception {
 
     // Find the example Matcher PGP secret key ring file
-    File matcherSecretKeyFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_SECRET_KEYRING_FILE);
-    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, PGPUtilsTest.TEST_DATA_PASSWORD);
+    File matcherSecretKeyFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_SECRET_KEYRING_FILE);
+    MatcherConfig matcherConfig = new MatcherConfig(matcherSecretKeyFile, BritTestUtils.TEST_DATA_PASSWORD);
 
     // Create a random temporary directory for the matcher store to use
     File matcherStoreDirectory = Files.createTempDir();

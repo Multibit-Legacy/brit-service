@@ -18,19 +18,7 @@
 
   <dependencies>
 
-    <!-- Bitcoinj (Alice for wallet extensions) -->
-    <dependency>
-      <groupId>org.bitcoinj</groupId>
-      <artifactId>bitcoinj-core</artifactId>
-      <version>0.13-SNAPSHOT-alice-0.1.0</version>
-    </dependency>
-
-    <!-- Spongy Castle for PGP support -->
-    <dependency>
-      <groupId>com.madgag.spongycastle</groupId>
-      <artifactId>pg</artifactId>
-      <version>1.51.0.0</version>
-    </dependency>
+    <!-- Nothing beyond MultiBit Commons -->
 
   </dependencies>
 

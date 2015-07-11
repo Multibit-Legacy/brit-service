@@ -18,11 +18,11 @@ package org.multibit.hd.brit.payer;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.multibit.hd.brit.core.crypto.PGPUtils;
+import org.multibit.commons.crypto.PGPUtils;
 import org.multibit.hd.brit.core.payer.Payer;
 import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
-import org.multibit.hd.brit.crypto.PGPUtilsTest;
+import org.multibit.hd.brit.BritTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.openpgp.PGPPublicKey;
@@ -43,7 +43,7 @@ public class PayersTest {
   @Test
   public void testCreatePayer() throws Exception {
     // Load the example Matcher PGP public key
-    File matcherPublicKeyFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_PUBLIC_KEY_FILE);
+    File matcherPublicKeyFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_PUBLIC_KEY_FILE);
     FileInputStream matcherPublicKeyInputStream = new FileInputStream(matcherPublicKeyFile);
     PGPPublicKey matcherPGPPublicKey = PGPUtils.readPublicKey(matcherPublicKeyInputStream);
 

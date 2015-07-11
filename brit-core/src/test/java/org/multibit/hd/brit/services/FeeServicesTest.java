@@ -29,12 +29,12 @@ import org.bitcoinj.wallet.KeyChainGroup;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.multibit.hd.brit.core.crypto.PGPUtils;
+import org.multibit.commons.crypto.PGPUtils;
 import org.multibit.hd.brit.core.dto.FeeState;
 import org.multibit.hd.brit.core.extensions.MatcherResponseWalletExtension;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.crypto.PGPUtilsTest;
+import org.multibit.hd.brit.BritTestUtils;
 import org.multibit.hd.brit.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +102,7 @@ public class FeeServicesTest {
     toAddress1 = toKey1.toAddress(NETWORK_PARAMETERS);
 
     // Read the manually created public keyring in the test directory to find a public key suitable for encryption
-    File publicKeyRingFile = PGPUtilsTest.makeFile(PGPUtilsTest.TEST_MATCHER_PUBLIC_KEYRING_FILE);
+    File publicKeyRingFile = BritTestUtils.makeFile(BritTestUtils.TEST_MATCHER_PUBLIC_KEYRING_FILE);
     log.debug("Loading public keyring from '" + publicKeyRingFile.getAbsolutePath() + "'");
     FileInputStream publicKeyRingInputStream = new FileInputStream(publicKeyRingFile);
     encryptionKey = PGPUtils.readPublicKey(publicKeyRingInputStream);

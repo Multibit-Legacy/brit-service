@@ -1,5 +1,6 @@
 package org.multibit.hd.brit.core.services;
 
+import org.multibit.commons.crypto.PGPUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.openpgp.PGPException;
@@ -25,7 +26,7 @@ public class BRITServices {
   /**
    * The URL of the live matcher daemon
    */
-  public static final String LIVE_MATCHER_URL = "https://multibit.org/brit";
+  public static final String LIVE_MATCHER_URL = "http://localhost:7070/brit";
 
   /**
    * The live matcher PGP public key file
@@ -56,7 +57,7 @@ public class BRITServices {
    */
   public static PGPPublicKey getMatcherPublicKey() throws IOException, PGPException {
     InputStream pgpPublicKeyInputStream = BRITServices.class.getResourceAsStream(LIVE_MATCHER_PUBLIC_KEY_FILE);
-    return org.multibit.hd.brit.core.crypto.PGPUtils.readPublicKey(pgpPublicKeyInputStream);
+    return PGPUtils.readPublicKey(pgpPublicKeyInputStream);
   }
 
 }

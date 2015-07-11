@@ -9,7 +9,7 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.config.LoggingFactory;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.eclipse.jetty.server.session.SessionHandler;
-import org.multibit.hd.brit.core.crypto.PGPUtils;
+import org.multibit.commons.crypto.PGPUtils;
 import org.multibit.hd.brit.core.matcher.*;
 import org.multibit.hd.brit.rest.health.BritMatcherVersion1HealthCheck;
 import org.multibit.hd.brit.rest.health.BritMatcherVersion2HealthCheck;

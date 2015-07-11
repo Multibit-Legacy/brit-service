@@ -160,43 +160,11 @@
 
     <dependencies>
 
-      <!-- Logging is through SLF4J and Logback -->
+      <!-- MultiBit Commons for standard libraries and utilities -->
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jul-to-slf4j</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.0.10</version>
-      </dependency>
-
-      <!-- Google Guava for code utilities -->
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <!-- Require v16.0.1+ for full JDK1.7.0_51+ compliance -->
-        <version>16.0.1</version>
-      </dependency>
-
-      <!-- Joda time for timestamps -->
-      <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>2.2</version>
-      </dependency>
-
-      <!-- Findbugs annotations -->
-      <dependency>
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>annotations</artifactId>
-        <version>2.0.1</version>
+        <groupId>org.multibit</groupId>
+        <artifactId>commons</artifactId>
+        <version>develop-SNAPSHOT</version>
       </dependency>
 
       <!-- Testing -->
@@ -231,32 +199,10 @@
   <!-- All modules will have these dependencies -->
   <dependencies>
 
-    <!-- All logging is through SLF4J and Logback in JSON for Logstash -->
+    <!-- MultiBit Commons for standard libraries and utilities -->
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jul-to-slf4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
-
-    <!-- Google Guava for code utilities -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-
-    <!-- Findbugs annotations -->
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>annotations</artifactId>
-    </dependency>
-
-    <!-- Joda time for timestamps -->
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
+      <groupId>org.multibit</groupId>
+      <artifactId>commons</artifactId>
     </dependency>
 
     <!-- Testing -->
