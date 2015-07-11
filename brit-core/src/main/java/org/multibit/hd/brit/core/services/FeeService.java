@@ -9,6 +9,7 @@ import org.bitcoinj.core.*;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.script.Script;
 import org.multibit.commons.crypto.AESUtils;
+import org.multibit.commons.utils.HttpsUtils;
 import org.multibit.hd.brit.core.dto.*;
 import org.multibit.hd.brit.core.exceptions.MatcherResponseException;
 import org.multibit.hd.brit.core.exceptions.PayerRequestException;
@@ -17,7 +18,6 @@ import org.multibit.hd.brit.core.extensions.SendFeeDtoWalletExtension;
 import org.multibit.hd.brit.core.payer.Payer;
 import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
-import org.multibit.commons.utils.HttpsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.openpgp.PGPPublicKey;
@@ -42,9 +42,9 @@ public class FeeService {
 
   private static final Logger log = LoggerFactory.getLogger(FeeService.class);
 
-  public static final Coin MINIMUM_FEE_PER_KB = Coin.valueOf(1000);  // The minimum relay fee as per Bitcoin Core 0.9
-  public static final Coin DEFAULT_FEE_PER_KB = Coin.valueOf(3000);  // Logarithmically halfway ish between min and max
-  public static final Coin MAXIMUM_FEE_PER_KB = Coin.valueOf(10000); // 0.1 mBTC per KB - a long used fee structure
+  public static final Coin MINIMUM_FEE_PER_KB = Coin.valueOf(1000);   // Slightly higher than the minimum relay fee (1000 sat per KB)  as per Bitcoin Core 0.9
+  public static final Coin DEFAULT_FEE_PER_KB = Coin.valueOf(10000);  // 0.1 mBTC per KB - a long used fee structure which works as of spam attacks of July 2015
+  public static final Coin MAXIMUM_FEE_PER_KB = Coin.valueOf(50000);  // 0.5 mBTC per KB
 
   public static final String DONATION_ADDRESS = "1AhN6rPdrMuKBGFDKR1k9A8SCLYaNgXhty";
   public static final String DEFAULT_DONATION_AMOUNT = "0.01"; // in BTC as per BIP21
@@ -73,7 +73,7 @@ public class FeeService {
    */
   public final static int NEXT_SEND_DELTA_UPPER_LIMIT = 25;
 
-  private org.multibit.hd.brit.core.services.TransactionSentBySelfProvider transactionSentBySelfProvider;
+  private TransactionSentBySelfProvider transactionSentBySelfProvider;
 
 
   private SecureRandom secureRandom;
@@ -100,7 +100,7 @@ public class FeeService {
     log.debug("Creating FeeService with matcherURL: {}", matcherURL);
   }
 
-  public void setTransactionSentBySelfProvider(org.multibit.hd.brit.core.services.TransactionSentBySelfProvider transactionSentBySelfProvider) {
+  public void setTransactionSentBySelfProvider(TransactionSentBySelfProvider transactionSentBySelfProvider) {
     this.transactionSentBySelfProvider = transactionSentBySelfProvider;
   }
 
@@ -160,7 +160,7 @@ public class FeeService {
 
       // Fall back to the list of hardwired addresses
       log.warn("Using hardwired addresses");
-      matcherResponse = new MatcherResponse(payerRequest.getVersion(), Optional.<Date>absent(), getHardwiredFeeAddresses());
+      matcherResponse = new MatcherResponse(2, Optional.<Date>absent(), getHardwiredFeeAddresses());
     }
 
     // Add the MatcherResponse as a wallet extension so that on the next wallet write it will be persisted
@@ -246,7 +246,7 @@ public class FeeService {
     boolean usePersistedData = false;
     if (sendFeeDto != null && sendFeeDto.getSendFeeCount().isPresent()) {
       if ((sendFeeDto.getSendFeeCount().get() >= lastFeePayingSendCount) &&
-              !((lastFeePayingSendingCountOptional.isPresent()) && (lastFeePayingSendingCountOptional.get().equals(sendFeeDto.getSendFeeCount().get())))) {
+        !((lastFeePayingSendingCountOptional.isPresent()) && (lastFeePayingSendingCountOptional.get().equals(sendFeeDto.getSendFeeCount().get())))) {
         usePersistedData = true;
       }
     }
@@ -267,7 +267,7 @@ public class FeeService {
       int numberOfSendCountsPaidFor = (int) feePaid.divide(FEE_PER_SEND);
 
       nextSendFeeCount = numberOfSendCountsPaidFor +
-              +NEXT_SEND_DELTA_LOWER_LIMIT + secureRandom.nextInt(NEXT_SEND_DELTA_UPPER_LIMIT - NEXT_SEND_DELTA_LOWER_LIMIT);
+        +NEXT_SEND_DELTA_LOWER_LIMIT + secureRandom.nextInt(NEXT_SEND_DELTA_UPPER_LIMIT - NEXT_SEND_DELTA_LOWER_LIMIT);
 
       // If we already have more sends than that then mark the next send as a fee send ie send a fee ASAP
       if (currentNumberOfSends >= nextSendFeeCount) {
@@ -279,8 +279,8 @@ public class FeeService {
       // Work out the next fee send address - it is random
       Set<Address> candidateSendFeeAddresses;
       if (matcherResponseFromWallet == null
-              || matcherResponseFromWallet.getBitcoinAddresses() == null
-              || matcherResponseFromWallet.getBitcoinAddresses().isEmpty()) {
+        || matcherResponseFromWallet.getBitcoinAddresses() == null
+        || matcherResponseFromWallet.getBitcoinAddresses().isEmpty()) {
         candidateSendFeeAddresses = getHardwiredFeeAddresses();
       } else {
         candidateSendFeeAddresses = matcherResponseFromWallet.getBitcoinAddresses();
@@ -430,12 +430,12 @@ public class FeeService {
 
     String[] rawAddresses = new String[]{
 
-            "1AhN6rPdrMuKBGFDKR1k9A8SCLYaNgXhty",
-            "14Ru32Lb4kdLGfAMz1VAtxh3UFku62HaNH",
-            "1KesQEF2yC2FzkJYLLozZJdbBF7zRhrdSC",
-            "1CuWW5fDxuFN6CcrRi51ADWHXAMJPYxY5y",
-            "1NfNX36S8aocBomvWgySaK9fn93pbpEhmY",
-            "1J1nTRJJT3ghsnAEvwd8dMmoTuaAMSLf4V"
+      "1AhN6rPdrMuKBGFDKR1k9A8SCLYaNgXhty",
+      "14Ru32Lb4kdLGfAMz1VAtxh3UFku62HaNH",
+      "1KesQEF2yC2FzkJYLLozZJdbBF7zRhrdSC",
+      "1CuWW5fDxuFN6CcrRi51ADWHXAMJPYxY5y",
+      "1NfNX36S8aocBomvWgySaK9fn93pbpEhmY",
+      "1J1nTRJJT3ghsnAEvwd8dMmoTuaAMSLf4V"
 
     };
 
