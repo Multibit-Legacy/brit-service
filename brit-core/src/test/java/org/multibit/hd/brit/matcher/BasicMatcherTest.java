@@ -28,8 +28,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.multibit.commons.crypto.AESUtils;
 import org.multibit.commons.crypto.PGPUtils;
+import org.multibit.hd.brit.BritTestUtils;
 import org.multibit.hd.brit.core.dto.*;
-import org.multibit.hd.brit.core.exceptions.MatcherResponseException;
 import org.multibit.hd.brit.core.matcher.*;
 import org.multibit.hd.brit.core.payer.BasicPayer;
 import org.multibit.hd.brit.core.payer.Payer;
@@ -37,7 +37,6 @@ import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.BritTestUtils;
 import org.multibit.hd.brit.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
 
 
 public class BasicMatcherTest {
@@ -67,7 +65,7 @@ public class BasicMatcherTest {
 
     String[] rawTestAddresses = new String[]{
 
-      // Good addresses
+      // Good addresses (6)
       "1AhN6rPdrMuKBGFDKR1k9A8SCLYaNgXhty",
       "14Ru32Lb4kdLGfAMz1VAtxh3UFku62HaNH",
       "1KesQEF2yC2FzkJYLLozZJdbBF7zRhrdSC",
@@ -153,11 +151,13 @@ public class BasicMatcherTest {
     // The Payer's Matcher response contains the list of addresses the Payer will use
     Set<Address> addressList = payersMatcherResponse.getBitcoinAddresses();
     assertThat(addressList).isNotNull();
+    assertThat(addressList.size()).isEqualTo(6);
     assertThat(addressList.contains(testAddresses.get(0))).isTrue();
     assertThat(addressList.contains(testAddresses.get(1))).isTrue();
     assertThat(addressList.contains(testAddresses.get(2))).isTrue();
     assertThat(addressList.contains(testAddresses.get(3))).isTrue();
     assertThat(addressList.contains(testAddresses.get(4))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(5))).isTrue();
 
     // The Payer's Matcher response contains a stored replay date for the wallet
     Date replayDate = payersMatcherResponse.getReplayDate().get();
@@ -230,6 +230,7 @@ public class BasicMatcherTest {
     // The Payer's Matcher response contains the list of addresses the Payer will use
     Set<Address> addressList = payersMatcherResponse.getBitcoinAddresses();
     assertThat(addressList).isNotNull();
+    assertThat(addressList.size()).isEqualTo(6);
     assertThat(addressList.contains(testAddresses.get(0))).isTrue();
     assertThat(addressList.contains(testAddresses.get(1))).isTrue();
     assertThat(addressList.contains(testAddresses.get(2))).isTrue();
@@ -246,7 +247,7 @@ public class BasicMatcherTest {
    * Verifies the Version 2 interaction when one address is bad (server damaged)
    * @throws Exception
    */
-  @Test(expected = MatcherResponseException.class)
+  @Test
   public void testPayerRequestAndMatcherResponse_Version_2_One_Bad() throws Exception {
 
     // Create a standard Payer
@@ -307,12 +308,12 @@ public class BasicMatcherTest {
         }
         if (getBitcoinAddresses() != null) {
           for (Address address : getBitcoinAddresses()) {
+            // Interleave a bad address to avoid test misses
+            builder.append("1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").append(PayerRequest.SEPARATOR);
             builder.append(address).append(PayerRequest.SEPARATOR);
           }
         }
 
-        // Append a bad address
-        builder.append("1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX").append(PayerRequest.SEPARATOR);
 
         return builder.toString().getBytes(Charsets.UTF_8);
 
@@ -328,9 +329,18 @@ public class BasicMatcherTest {
     // The payer can decrypt the encryptedMatcherResponse
     // as it knows the BRITWalletId and session id
     // We expect an exception due to the malformed address within
-    payer.decryptMatcherResponse(encryptedMatcherResponse, payerRequest);
+    MatcherResponse payersMatcherResponse = payer.decryptMatcherResponse(encryptedMatcherResponse, payerRequest);
 
-    fail("Expected exception");
+    // The Payer's Matcher response contains the list of addresses the Payer will use
+    Set<Address> addressList = payersMatcherResponse.getBitcoinAddresses();
+    assertThat(addressList).isNotNull();
+    assertThat(addressList.size()).isEqualTo(6);
+    assertThat(addressList.contains(testAddresses.get(0))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(1))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(2))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(3))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(4))).isTrue();
+    assertThat(addressList.contains(testAddresses.get(5))).isTrue();
 
   }
 
@@ -383,6 +393,7 @@ public class BasicMatcherTest {
     bitcoinAddresses.add(testAddresses.get(2));
     bitcoinAddresses.add(testAddresses.get(3));
     bitcoinAddresses.add(testAddresses.get(4));
+    bitcoinAddresses.add(testAddresses.get(5));
 
     matcherStore.storeBitcoinAddressesForDate(bitcoinAddresses, new Date());
 

@@ -127,8 +127,11 @@ public class MatcherResponse {
             try {
               bitcoinAddresses.add(new Address(MainNetParams.get(), rows[i]));
             } catch (AddressFormatException e) {
-              // BRIT version 2 is more strict in its handling of malformed content
-              throw new MatcherResponseException("Malformed address in response: " + rows[i]);
+              // We ignore the malformed address but continue processing for the following reasons:
+              // 1. With a valid HMAC it is overwhelmingly likely to be a glitch at the server so safe to ignore
+              // 2. Coercing this code to send Version 1 means it is already compromised
+              // 3. Version 1 has this behaviour so this code works with legacy PayerRequests assisting testing
+              log.warn("Malformed address in response: '{}'", rows[i]);
             }
           }
         }
