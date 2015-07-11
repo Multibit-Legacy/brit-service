@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.matcher;
+package org.multibit.hd.brit.core.matcher;
 
 /**
  * Copyright 2014 multibit.org
@@ -28,11 +28,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.multibit.hd.brit.core.dto.BRITWalletId;
 import org.multibit.hd.brit.core.dto.WalletToEncounterDateLink;
-import org.multibit.hd.brit.core.matcher.MatcherStore;
-import org.multibit.hd.brit.core.matcher.MatcherStores;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.dto.BRITWalletIdTest;
+import org.multibit.hd.brit.core.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

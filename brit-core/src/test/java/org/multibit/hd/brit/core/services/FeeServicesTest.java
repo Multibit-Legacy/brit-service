@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.services;
+package org.multibit.hd.brit.core.services;
 
 /**
  * Copyright 2014 multibit.org
@@ -30,12 +30,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.multibit.commons.crypto.PGPUtils;
+import org.multibit.hd.brit.core.BritTestUtils;
+import org.multibit.hd.brit.core.dto.BRITWalletIdTest;
 import org.multibit.hd.brit.core.dto.FeeState;
 import org.multibit.hd.brit.core.extensions.MatcherResponseWalletExtension;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.BritTestUtils;
-import org.multibit.hd.brit.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.params.KeyParameter;
@@ -118,7 +118,7 @@ public class FeeServicesTest {
   public void testCalculateFeeStateWithDummyURL() throws Exception {
 
     // Get the FeeService
-    org.multibit.hd.brit.core.services.FeeService feeService = new org.multibit.hd.brit.core.services.FeeService(encryptionKey, new URL(DUMMY_MATCHER_URL));
+    FeeService feeService = new FeeService(encryptionKey, new URL(DUMMY_MATCHER_URL));
     assertThat(feeService).isNotNull();
 
     // Perform an exchange with the BRIT Matcher to get the list of fee addresses
@@ -132,7 +132,7 @@ public class FeeServicesTest {
     // We are using a dummy Matcher so will always fall back to the hardwired addresses
     Set<Address> possibleNextFeeAddresses = feeService.getHardwiredFeeAddresses();
 
-    checkFeeState(feeState, true, 0, Coin.ZERO, org.multibit.hd.brit.core.services.FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
+    checkFeeState(feeState, true, 0, Coin.ZERO, FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
 
     // Receive some bitcoin to the wallet1 address
     receiveATransaction(wallet1, toAddress1);
@@ -146,46 +146,46 @@ public class FeeServicesTest {
 
       feeState = feeService.calculateFeeState(wallet1, false);
 
-      checkFeeState(feeState, true, 1 + i, org.multibit.hd.brit.core.services.FeeService.FEE_PER_SEND.multiply(i + 1), org.multibit.hd.brit.core.services.FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
+      checkFeeState(feeState, true, 1 + i, FeeService.FEE_PER_SEND.multiply(i + 1), FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
     }
 
     // Create another send to the FEE address
     // Pay the feeOwed and another fee amount (to pay for this send)
     // This should reset the amount owed and create another feeAddress
-    sendBitcoin(feeState.getFeeOwed().add(org.multibit.hd.brit.core.services.FeeService.FEE_PER_SEND), feeState.getNextFeeAddress(), null);
+    sendBitcoin(feeState.getFeeOwed().add(FeeService.FEE_PER_SEND), feeState.getNextFeeAddress(), null);
 
     feeState = feeService.calculateFeeState(wallet1, false);
-    checkFeeState(feeState, true, NUMBER_OF_NON_FEE_SENDS + 1, Coin.ZERO, org.multibit.hd.brit.core.services.FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
+    checkFeeState(feeState, true, NUMBER_OF_NON_FEE_SENDS + 1, Coin.ZERO, FeeService.FEE_PER_SEND, possibleNextFeeAddresses);
   }
 
   @Test
   public void checkFeePerKB() {
 
     // Check minimum
-    assertThat(Coin.valueOf(1000).equals(org.multibit.hd.brit.core.services.FeeService.MINIMUM_FEE_PER_KB)).isTrue();
+    assertThat(Coin.valueOf(1000).equals(FeeService.MINIMUM_FEE_PER_KB)).isTrue();
 
     // Check default
-    assertThat(Coin.valueOf(3000).equals(org.multibit.hd.brit.core.services.FeeService.DEFAULT_FEE_PER_KB)).isTrue();
+    assertThat(Coin.valueOf(10000).equals(FeeService.DEFAULT_FEE_PER_KB)).isTrue();
 
     // Check maximum
-    assertThat(Coin.valueOf(10000).equals(org.multibit.hd.brit.core.services.FeeService.MAXIMUM_FEE_PER_KB)).isTrue();
+    assertThat(Coin.valueOf(50000).equals(FeeService.MAXIMUM_FEE_PER_KB)).isTrue();
 
     // Check normalisation logic
 
     // Missing - set to default
-    assertThat(org.multibit.hd.brit.core.services.FeeService.DEFAULT_FEE_PER_KB.equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(0))).isTrue();
+    assertThat(FeeService.DEFAULT_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(0))).isTrue();
 
     // Too small
-    assertThat(org.multibit.hd.brit.core.services.FeeService.MINIMUM_FEE_PER_KB.equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(-1))).isTrue();
-    assertThat(org.multibit.hd.brit.core.services.FeeService.MINIMUM_FEE_PER_KB.equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(999))).isTrue();
+    assertThat(FeeService.MINIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(-1))).isTrue();
+    assertThat(FeeService.MINIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(999))).isTrue();
 
     // Just right
-    assertThat(Coin.valueOf(1234).equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(1234))).isTrue();
+    assertThat(Coin.valueOf(12345).equals(FeeService.normaliseRawFeePerKB(12345))).isTrue();
 
     // Too big
-    assertThat(org.multibit.hd.brit.core.services.FeeService.MAXIMUM_FEE_PER_KB.equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(10001))).isTrue();
-    assertThat(org.multibit.hd.brit.core.services.FeeService.MAXIMUM_FEE_PER_KB.equals(org.multibit.hd.brit.core.services.FeeService.normaliseRawFeePerKB(123456))).isTrue();
-   }
+    assertThat(FeeService.MAXIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(50001))).isTrue();
+    assertThat(FeeService.MAXIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(1123456))).isTrue();
+  }
 
   private void checkFeeState(
     FeeState feeState,
@@ -201,7 +201,7 @@ public class FeeServicesTest {
     assertThat(feeState.getFeePerSendSatoshi()).isEqualTo(expectedFeePerSendSatoshi);
     assertThat(possibleNextFeeAddresses.contains(feeState.getNextFeeAddress())).isTrue();
 
-    int upperLimitOfNextFeeSendCount = feeState.getCurrentNumberOfSends() + org.multibit.hd.brit.core.services.FeeService.NEXT_SEND_DELTA_UPPER_LIMIT - 1;
+    int upperLimitOfNextFeeSendCount = feeState.getCurrentNumberOfSends() + FeeService.NEXT_SEND_DELTA_UPPER_LIMIT - 1;
 
     // Verify limits
     assertThat(upperLimitOfNextFeeSendCount).isGreaterThanOrEqualTo(feeState.getNextFeeSendCount());

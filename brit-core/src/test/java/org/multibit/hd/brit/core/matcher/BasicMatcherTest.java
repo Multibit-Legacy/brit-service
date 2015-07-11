@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.matcher;
+package org.multibit.hd.brit.core.matcher;
 
 /**
  * Copyright 2014 multibit.org
@@ -28,16 +28,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.multibit.commons.crypto.AESUtils;
 import org.multibit.commons.crypto.PGPUtils;
-import org.multibit.hd.brit.BritTestUtils;
+import org.multibit.hd.brit.core.BritTestUtils;
 import org.multibit.hd.brit.core.dto.*;
-import org.multibit.hd.brit.core.matcher.*;
 import org.multibit.hd.brit.core.payer.BasicPayer;
 import org.multibit.hd.brit.core.payer.Payer;
 import org.multibit.hd.brit.core.payer.PayerConfig;
 import org.multibit.hd.brit.core.payer.Payers;
 import org.multibit.hd.brit.core.seed_phrase.Bip39SeedPhraseGenerator;
 import org.multibit.hd.brit.core.seed_phrase.SeedPhraseGenerator;
-import org.multibit.hd.brit.dto.BRITWalletIdTest;
+import org.multibit.hd.brit.core.dto.BRITWalletIdTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.openpgp.PGPPublicKey;

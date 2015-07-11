@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.redeemer;
+package org.multibit.hd.brit.core.redeemer;
 
 /**
  * Copyright 2014 multibit.org

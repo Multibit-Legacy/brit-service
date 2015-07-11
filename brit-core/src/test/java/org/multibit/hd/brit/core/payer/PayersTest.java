@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.payer;
+package org.multibit.hd.brit.core.payer;
 
 /**
  * Copyright 2014 multibit.org
@@ -19,10 +19,7 @@ package org.multibit.hd.brit.payer;
 import org.junit.Before;
 import org.junit.Test;
 import org.multibit.commons.crypto.PGPUtils;
-import org.multibit.hd.brit.core.payer.Payer;
-import org.multibit.hd.brit.core.payer.PayerConfig;
-import org.multibit.hd.brit.core.payer.Payers;
-import org.multibit.hd.brit.BritTestUtils;
+import org.multibit.hd.brit.core.BritTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.openpgp.PGPPublicKey;

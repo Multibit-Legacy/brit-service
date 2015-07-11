@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.dto;
+package org.multibit.hd.brit.core.dto;
 
 /**
  * Copyright 2014 multibit.org

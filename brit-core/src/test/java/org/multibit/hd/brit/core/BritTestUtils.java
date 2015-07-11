@@ -1,4 +1,4 @@
-package org.multibit.hd.brit;
+package org.multibit.hd.brit.core;
 
 /**
  * Copyright 2014 multibit.org

@@ -1,4 +1,4 @@
-package org.multibit.hd.brit.matcher;
+package org.multibit.hd.brit.core.matcher;
 
 /**
  * Copyright 2014 multibit.org
@@ -19,8 +19,7 @@ package org.multibit.hd.brit.matcher;
 import com.google.common.io.Files;
 import org.junit.Before;
 import org.junit.Test;
-import org.multibit.hd.brit.core.matcher.*;
-import org.multibit.hd.brit.BritTestUtils;
+import org.multibit.hd.brit.core.BritTestUtils;
 
 import java.io.File;
 
