@@ -26,7 +26,7 @@ public class BRITServices {
   /**
    * The URL of the live matcher daemon
    */
-  public static final String LIVE_MATCHER_URL = "http://localhost:7070/brit";
+  public static final String LIVE_MATCHER_URL = "https://multibit.org/brit";
 
   /**
    * The live matcher PGP public key file
