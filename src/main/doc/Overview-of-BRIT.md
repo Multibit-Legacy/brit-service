@@ -92,7 +92,6 @@ This data is denoted as:
 The Payer creates a random session key (`payer.sessionKey`). This is a 16 byte random number. This is used by the
 Matcher so that the Payer can have confidence that the responses from the Matcher are genuine.
 
-
 ### 5. Payer derives a unique BRIT wallet identifier
 
 The Payer runs a number of one way trapdoor functions over their wallet seed phrase to deterministically generate a wallet
@@ -129,9 +128,10 @@ The Matcher generates an AES256 key `matcher.AES.encryptionKey` as follows:
 The SHA256 is used to stretch the britWalletId to 32 bytes, suitable for use as an AES encryption key.
 
 The purpose of this step is to encrypt the information returned to the Payer to prevent eavesdropping.
-It also validates the Matcher is actually the BRIT Matcher and has not been man-in-the-middled.
-Only the Matcher has the `matcher.PGP.private` key to decode the message in equation (1).
+It also validates the Matcher is actually the BRIT Matcher and (to some extent) has not been man-in-the-middled (MITM).
+See Section 10 for more information on MITM defence.
 
+Only the Matcher has the `matcher.PGP.private` key to decode the message in equation (1).
 
 ### 9. Matcher stores the Payer-date encountered link
 
@@ -155,9 +155,26 @@ The matcher encrypts the`matcher.replayDate` and the `matcher.bitcoinAddressList
 The resulting message is sent to the Payer who can decrypt it since they know how `matcher.AES.encryptionKey` and
 `matcher.AES.initialisationVector` were generated from the `payer.britWalletId` and `payer.sessionKey` (Equations 2 and 3).
 
-### 11. Payer selects payment Bitcoin address and pays bitcoin to it
+In BRIT version 2+ a SHA256 HMAC is appended to the encrypted response so that the Payer can verify that the encrypted response has
+not been tampered with in transit before attempting decryption. This is seeded with `matcher.AES.encryptionKey` so that the Payer
+can verify it without needing to decrypt the payload. 
 
-Any time the Payer has to make a payment they randomly choose a Bitcoin address from `matcher.bitcoinAddressList`.
+### 11. Payer verifies response
+ 
+Payer verifies the HMAC and, if valid, decrypts the payload. Any malformed addresses contained within are assumed to
+be the result of a server error and are discarded. 
+
+In the event of an unrecoverable problem (server down, HMAC is invalid, insufficient valid addresses etc), the built-in 
+default addresses within the signed JAR are used instead. 
+
+### 12. Payer stores addresses
+ 
+The Payer stores the BRIT addresses in the local wallet ready for use when a payment triggers it.
+
+### 13. Payer selects payment Bitcoin address and pays bitcoin to it
+
+When the criteria for settling a BRIT payment is satisfied (depends on the client) the Payer randomly chooses a Bitcoin 
+address from `matcher.bitcoinAddressList`.
 
 The Payer then creates a Bitcoin transaction with an output spending to this address. It is expected that this output
 would be included in a transaction that the Payer would be making for another purpose.
@@ -165,7 +182,7 @@ would be included in a transaction that the Payer would be making for another pu
 The existence of this output could act as a marker in the overall blockchain for BRIT transactions. There are several
 strategies available to further obfuscate the information being leaked that are discussed later.
 
-### 12. Redeemer redeems bitcoin
+### 14. Redeemer redeems bitcoin
 
 The Redeemer can monitors all the Bitcoin addresses in their `redeemer.bitcoinAddress` list. They can redeem these
 payments directly as they have the private keys for all of these addresses.
