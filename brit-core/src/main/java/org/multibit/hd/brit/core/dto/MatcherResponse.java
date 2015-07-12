@@ -81,7 +81,6 @@ public class MatcherResponse {
       }
     }
 
-    log.trace("Serialised matcherResponse = \n{}\n", builder.toString());
     return builder.toString().getBytes(Charsets.UTF_8);
 
   }
@@ -164,11 +163,4 @@ public class MatcherResponse {
     return result;
   }
 
-  @Override
-  public String toString() {
-    return "MatcherResponse{" +
-      "replayDateOptional=" + replayDateOptional +
-      ", addressList=" + bitcoinAddresses +
-      '}';
-  }
 }

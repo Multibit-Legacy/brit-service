@@ -73,7 +73,6 @@ public class WalletToEncounterDateLink {
       builder.append(PayerRequest.OPTIONAL_NOT_PRESENT_TEXT);
     }
 
-    log.debug("Serialised walletToEncounterDateLink = \n" + builder.toString());
     return builder.toString();
 
   }
@@ -84,8 +83,6 @@ public class WalletToEncounterDateLink {
    * @return The wallet to encounter date link
    */
   public static WalletToEncounterDateLink parse(String serialisedWalletToEncounterDate) {
-
-    log.trace("Attempting to parse walletToEncounterDateLink:\n{}", serialisedWalletToEncounterDate);
 
     if (serialisedWalletToEncounterDate == null) {
       return null;
@@ -145,12 +142,4 @@ public class WalletToEncounterDateLink {
 
   }
 
-  @Override
-  public String toString() {
-    return "WalletToEncounterDateLink{" +
-      "britWalletId=" + britWalletId +
-      ", encounterDateOptional=" + encounterDateOptional +
-      ", firstTransactionDate=" + firstTransactionDate +
-      '}';
-  }
 }

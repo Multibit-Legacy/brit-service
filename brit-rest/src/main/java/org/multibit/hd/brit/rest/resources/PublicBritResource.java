@@ -150,7 +150,7 @@ public class PublicBritResource extends BaseResource {
     try {
       // The Matcher can decrypt the EncryptedPaymentRequest using its PGP secret key
       final PayerRequest payerRequest = matcher.decryptPayerRequest(encryptedPayerRequest);
-      log.debug("Decrypted Version {} Payer request. BRIT walletId: {}", payerRequest.getVersion(), payerRequest.getBritWalletId());
+      log.debug("Decrypted Version {} Payer request.", payerRequest.getVersion());
 
       // Get the Matcher to process the EncryptedPayerRequest
       final MatcherResponse matcherResponse = matcher.process(payerRequest);
@@ -161,7 +161,7 @@ public class PublicBritResource extends BaseResource {
       // Encrypt the Matcher response with the AES session key
       encryptedMatcherResponse = matcher.encryptMatcherResponse(matcherResponse, payerRequest);
       Preconditions.checkNotNull(encryptedMatcherResponse, "'encryptedMatcherResponse' must be present");
-      log.debug("Encrypted Version {} matcher response, size: {} bytes", matcherResponse.getVersion(), encryptedMatcherResponse.getPayload().length);
+      log.debug("Encrypted Version {} Matcher response. Size: {} bytes", matcherResponse.getVersion(), encryptedMatcherResponse.getPayload().length);
 
       // Put it in the cache for later
       MatcherResponseCache.INSTANCE.put(sha1, encryptedMatcherResponse);

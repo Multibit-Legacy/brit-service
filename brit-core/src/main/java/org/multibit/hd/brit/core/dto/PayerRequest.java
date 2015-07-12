@@ -158,13 +158,4 @@ public class PayerRequest {
     return result;
   }
 
-  @Override
-  public String toString() {
-    return "PayerRequest{" +
-      "version=" + version +
-      ", britWalletId=" + britWalletId +
-      ", sessionKey=" + Arrays.toString(sessionKey) +
-      ", firstTransactionDate=" + firstTransactionDate +
-      '}';
-  }
 }
