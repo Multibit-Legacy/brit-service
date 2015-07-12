@@ -168,7 +168,7 @@ public class BasicMatcher implements Matcher {
     // Create an AES key from the stretchedBritWalletId and the sessionKey and encrypt the payload
     KeyParameter aesKey = new KeyParameter(stretchedBritWalletId);
 
-    // Use the payer request as the IV since it is known to the client
+    // Use the payer request session key as the IV since it is known to the client
     // This may be prefixed to the cipher text so it is no longer secret
     byte[] iv = payerRequest.getSessionKey();
 
