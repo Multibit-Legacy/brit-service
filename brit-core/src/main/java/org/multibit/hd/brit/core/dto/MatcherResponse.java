@@ -1,13 +1,12 @@
 package org.multibit.hd.brit.core.dto;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.params.MainNetParams;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.params.MainNetParams;
 import org.multibit.hd.brit.core.exceptions.MatcherResponseException;
-import org.multibit.hd.brit.core.exceptions.PayerRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.Strings;
@@ -107,7 +106,7 @@ public class MatcherResponse {
       try {
         version = Integer.parseInt(rows[0]);
       } catch (IllegalArgumentException e) {
-        throw new PayerRequestException("The serialisedPayerRequest had a malformed version entry");
+        throw new MatcherResponseException("The serialisedPayerRequest had a malformed version entry");
       }
       // Version check
       if (version < 1 || version > 2) {

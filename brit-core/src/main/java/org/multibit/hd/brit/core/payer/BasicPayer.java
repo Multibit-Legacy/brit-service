@@ -117,6 +117,7 @@ public class BasicPayer implements Payer {
 
   @Override
   public MatcherResponse decryptMatcherResponse(EncryptedMatcherResponse encryptedMatcherResponse, PayerRequest payerRequest) throws MatcherResponseException {
+
     try {
 
       // Get the payload
@@ -154,7 +155,6 @@ public class BasicPayer implements Payer {
           mac.init(hmacKeySpec);
           byte[] expectedHmac = mac.doFinal(aesPayload);
 
-
           // Time-constant comparison
           if (!MessageDigest.isEqual(hmac, expectedHmac)) {
             // Log more details about the situation
@@ -162,7 +162,7 @@ public class BasicPayer implements Payer {
             log.debug("AES Payload: '{}'", Utils.HEX.encode(aesPayload));
             log.debug("Actual HMAC: '{}'", Utils.HEX.encode(hmac));
             log.debug("Expect HMAC: '{}'", Utils.HEX.encode(expectedHmac));
-            throw new MatcherResponseException("Invalid HMAC from server. Rejecting message.");
+            throw new MatcherResponseException("Invalid HMAC from server. Rejecting entire message.");
           }
 
           // Attempt to decrypt the AES payload
