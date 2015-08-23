@@ -7,11 +7,11 @@
   <parent>
     <groupId>org.multibit.hd</groupId>
     <artifactId>brit-parent</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
   </parent>
 
   <artifactId>brit-core</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 
   <name>BRIT Core</name>
   <description>The Burton-Rowe Income Technique (BRIT) core support files.</description>

@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
 
   <!-- Only change this on a master or release branch -->
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 
   <url>http://localhost:7070</url>
 
