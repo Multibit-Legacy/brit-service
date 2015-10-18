@@ -6,13 +6,13 @@
   <parent>
     <groupId>org.multibit.hd</groupId>
     <artifactId>brit-parent</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
   </parent>
 
   <artifactId>brit-rest</artifactId>
 
   <!-- Only change this on a master or release branch -->
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 
   <url>http://localhost:7070</url>
 
