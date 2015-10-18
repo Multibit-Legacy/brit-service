@@ -162,7 +162,7 @@ public class FeeServicesTest {
   public void checkFeePerKB() {
 
     // Check minimum
-    assertThat(Coin.valueOf(1000).equals(FeeService.MINIMUM_FEE_PER_KB)).isTrue();
+    assertThat(Coin.valueOf(5000).equals(FeeService.MINIMUM_FEE_PER_KB)).isTrue();
 
     // Check default
     assertThat(Coin.valueOf(10000).equals(FeeService.DEFAULT_FEE_PER_KB)).isTrue();
@@ -177,7 +177,7 @@ public class FeeServicesTest {
 
     // Too small
     assertThat(FeeService.MINIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(-1))).isTrue();
-    assertThat(FeeService.MINIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(999))).isTrue();
+    assertThat(FeeService.MINIMUM_FEE_PER_KB.equals(FeeService.normaliseRawFeePerKB(4999))).isTrue();
 
     // Just right
     assertThat(Coin.valueOf(12345).equals(FeeService.normaliseRawFeePerKB(12345))).isTrue();
